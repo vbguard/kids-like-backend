@@ -1,0 +1,485 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "API",
+		"description": "A minimal and easy API",
+		"license": {
+			"name": "MIT",
+			"url": "https://opensource.org/licenses/MIT"
+		}
+	},
+	"basePath": "/api",
+	"schemes": ["https", "http"],
+	"servers": [
+		{
+			"url": "https://task-manager.goit.co.ua/api",
+			"description": "The production API server"
+		},
+		{
+			"url": "http://localhost:50005/api",
+			"description": "The production API server"
+		}
+	],
+	"tags": [
+		{
+			"name": "Public",
+			"description": "NoProtected routes"
+		},
+		{
+			"name": "Protected",
+			"description": "Protected routes"
+		}
+	],
+	"consumes": ["application/json"],
+	"produces": ["application/json"],
+	"securityDefinitions": {},
+	"paths": {
+		"/auth": {
+			"post": {
+				"tags": ["Public"],
+				"summary": "route for register / login user in system",
+				"requestBody": {
+					"description": "Optional description in *Markdown*",
+					"required": ["nickname", "password"],
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AuthRequest"
+							},
+							"example": {
+								"nickname": "petrovich",
+								"password": "password"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "BAD",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": false
+										},
+										"message": {
+											"type": "string",
+											"example": "Invalid Password"
+										}
+									}
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "BAD",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"oneOf": [
+										{
+											"properties": {
+												"success": {
+													"type": "boolean",
+													"example": false
+												},
+												"message": {
+													"type": "string",
+													"example": "Field password empty"
+												}
+											}
+										},
+										{
+											"properties": {
+												"success": {
+													"type": "boolean",
+													"example": false
+												},
+												"message": {
+													"type": "string",
+													"example": "Field nickname empty"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tasks": {
+			"get": {
+				"tags": ["Protected"],
+				"summary": "Get first question by language ID, response - question, userId, languageId, ",
+				"security": ["bearerAuth"],
+				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "JWT",
+						"required": true,
+						"style": "simple",
+						"schema": {
+							"$ref": "#/components/securitySchemes/bearerAuth"
+						},
+						"style": "simple"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"$ref": "#/components/schemas/GetTasks"
+								}
+							}
+						}
+					},
+					"401": {
+						"$ref": "#/components/responses/UnauthorizedError"
+					},
+					"404": {
+						"description": "BAD",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {"type": "boolean"},
+										"error": {"type": "object"},
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tasks": {
+			"post": {
+				"tags": ["Protected"],
+				"summary": "Create new task",
+				"security": ["bearerAuth"],
+				"description": "Create new task",
+				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "JWT",
+						"required": true,
+						"style": "simple",
+						"schema": {
+							"$ref": "#/components/securitySchemes/bearerAuth"
+						},
+						"style": "simple"
+					}
+				],
+
+				"requestBody": {
+					"content": {
+						"applecation/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TaskCreate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"$ref": "#/components/schemas/GetTasks"
+								}
+							}
+						}
+					},
+					"401": {
+						"$ref": "#/components/responses/UnauthorizedError"
+					},
+					"404": {
+						"description": "BAD",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {"type": "boolean"},
+										"error": {"type": "object"},
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/task/{taskId}": {
+			"patch": {
+				"tags": ["Protected"],
+				"summary": "Update task",
+				"security": ["bearerAuth"],
+				"description": "Update task",
+				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "JWT",
+						"required": true,
+						"style": "simple",
+						"schema": {
+							"$ref": "#/components/securitySchemes/bearerAuth"
+						},
+						"style": "simple"
+          }
+				],
+				"requestBody": {
+					"content": {
+						"applecation/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"$ref": "#/components/schemas/GetTasks"
+								}
+							}
+						}
+					},
+					"401": {
+						"$ref": "#/components/responses/UnauthorizedError"
+					},
+					"404": {
+						"description": "BAD",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {"type": "boolean"},
+										"error": {"type": "object"},
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Protected"],
+				"summary": "Delete task",
+				"security": ["bearerAuth"],
+				"description": "Delete task",
+				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "JWT",
+						"required": true,
+						"style": "simple",
+						"schema": {
+							"$ref": "#/components/securitySchemes/bearerAuth"
+						},
+						"style": "simple"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"applecation/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Task"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"$ref": "#/components/schemas/GetTasks"
+								}
+							}
+						}
+					},
+					"401": {
+						"$ref": "#/components/responses/UnauthorizedError"
+					},
+					"404": {
+						"description": "BAD",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {"type": "boolean"},
+										"error": {"type": "object"},
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"api_key": {
+				"type": "scheme",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			},
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
+		"schemas": {
+			"AuthRequest": {
+				"type": "object",
+				"properties": {
+					"nickname": {
+						"type": "string",
+						"maxLength": 15,
+						"minLength": 5,
+						"required": true
+					},
+					"password": {
+						"type": "string",
+						"maxLength": 12,
+						"minLength": 5,
+						"required": true
+					}
+				},
+				"required": ["nickname", "password"],
+				"example": {
+					"nickname": "petrovich",
+					"password": "password"
+				}
+			},
+			"GetTasks": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"default": true,
+						"example": true
+					},
+					"tasks": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Task"
+						}
+					}
+				}
+			},
+			"Task": {
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {"type": "string"},
+					"_id": {"type": "string", "format": "uuid"},
+					"setId": {"type": "string", "format": "uuid"},
+					"dates": {
+						"type": "array",
+						"items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+						}
+					}
+				}
+			},
+			"TaskCreate": {
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {"type": "string"},
+					"dates": {
+						"type": "array",
+						"items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+						}
+					}
+				}
+			},
+			"AuthResponse": {
+				"type": "object",
+				"properties": {
+					"nickname": {
+						"type": "string",
+						"example": "petrovich"
+					},
+					"token": {
+						"type": "string",
+						"example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZDNhMTM4NmIxZTg1NTdjZjIzNjY3ODEiLCJpYXQiOjE1NjQwODcxNzV9.jSdzHuBSf4yKS6t7zwt0AoQIchHlz73JDOjfHVdbTBk"
+					}
+				}
+			}
+		},
+		"responses": {
+			"UnauthorizedError": {
+				"description": "Access token is missing or invalid"
+			}
+		}
+	}
+}
