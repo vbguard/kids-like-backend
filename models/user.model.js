@@ -24,10 +24,8 @@ const UserSchema = new Schema(
       maxlength: 12,
       trim: true
     },
-    userTasks: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Tasks'
-    }]
+    // add customTasks,
+    // add weekSet
 	},
 	{timestamps: true}
 );
