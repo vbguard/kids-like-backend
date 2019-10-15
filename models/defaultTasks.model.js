@@ -2,10 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const DefaultTasksSchema = new Schema({
-	id: String,
 	cardTitle: String,
 	imageUrl: String,
-	point: {type: Number, default: 1}
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "Users"
+  }
 });
 
 DefaultTasksSchema.pre('findOneAndUpdate', function() {

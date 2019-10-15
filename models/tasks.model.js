@@ -3,8 +3,10 @@ const Schema = mongoose.Schema;
 
 const DistinctTasksSchema = new Schema(
 	{
-		cardTitle: String,
-		imageUrl: String,
+		cardId: {
+      type: Schema.Types.ObjectId,
+      ref: "DefaultTasks"
+    },
 		isDone: {type: Boolean, default: false},
 		point: {type: Number, default: 1},
 		date: Date,
