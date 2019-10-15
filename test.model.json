@@ -1,0 +1,50 @@
+{
+	"weekSet": {
+		"allPoints": 22,
+    "donePoints": 10,
+    "week": { "firstDate": "07.10.2019", "lastDate": "13.10.2019"},
+		"days": [
+			{
+        "dayTitle": { "short": "ПН", "long": "Понеділок" },
+        "dayDate": "09.10.2019",
+				"dayTasks": [
+					{
+						"id": "gfasgsag",
+						"cardTitle": "CardTitle",
+						"imageUrl": "fgagagsa",
+						"isDone": false,
+						"point": 1
+					}
+				]
+			},
+			{
+				"dayTitle": "mon",
+				"dayTasks": [
+					{
+						"id": "gfasgsag",
+						"cardTitle": "CardTitle",
+						"imageUrl": "fgagagsa",
+						"isDone": false,
+						"point": 1
+					},
+					{},
+					{}
+				]
+			},
+			{
+				"dayTitle": "mon",
+				"dayTasks": [
+					{
+						"id": "gfasgsag",
+						"cardTitle": "CardTitle",
+						"imageUrl": "fgagagsa",
+						"isDone": false,
+						"point": 1
+					},
+					{},
+					{}
+				]
+			}
+		]
+	}
+}
