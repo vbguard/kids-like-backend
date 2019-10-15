@@ -2,7 +2,7 @@
 //! @ GET --- userId => find sets by userId => sets of User populate tasks === Finish😀
 //!
 //!
-const Tasks = require('../models/task.model');
+const Tasks = require('../models/tasks.model');
 const Users = require('../models/user.model');
 
 const updateTask = (req, res) => {
