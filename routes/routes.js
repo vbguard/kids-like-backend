@@ -11,10 +11,13 @@ const passportUserCheck = passport.authenticate('jwt', {
 });
 
 router.post('/auth', userController.getUser);
+
 router.get('/tasks/default', defaultTasksController.getDefaultTasks);
 router.post('/tasks/default', defaultTasksController.createDefaultTask);
+router.get('/tasks/default/:id', defaultTasksController.getDefaultTask);
+router.put('/tasks/default/:id', defaultTasksController.updateDefaultTask);
+router.delete('/tasks/default/:id', defaultTasksController.deleteDefaultTask);
 
 router.get('/tasks', passportUserCheck, taskController.getTasks);
-
 
 module.exports = router;
