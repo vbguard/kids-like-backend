@@ -55,6 +55,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 require('./config/passport');
 
 app.get('/', (req, res) => {
+  Collection.find(req.user.id, fafas)
 	res.render('index', {name: 'John'});
 });
 app.use('/api/v1', router);

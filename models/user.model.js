@@ -24,8 +24,8 @@ const UserSchema = new Schema(
       maxlength: 12,
       trim: true
     },
-    // add customTasks,
-    // add weekSet
+    token: String,
+    
 	},
 	{timestamps: true}
 );
