@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Users = require('../models/user.model');
 
-const DistinctTasksSchema = new Schema(
+const TasksSchema = new Schema(
 	{
 		cardId: {
-      type: Schema.Types.ObjectId,
-      ref: "DefaultTasks"
-    },
+			type: Schema.Types.ObjectId,
+			ref: 'DefaultTasks'
+		},
 		isDone: {type: Boolean, default: false},
 		point: {type: Number, default: 1},
-		date: Date,
+		// date: Date,
+		date: {type: Date, default: Date.now()},
 		userId: {
 			type: Schema.Types.ObjectId,
 			ref: 'Users'
@@ -20,7 +22,7 @@ const DistinctTasksSchema = new Schema(
 	}
 );
 
-DistinctTasksSchema.pre('findOneAndUpdate', function() {
+TasksSchema.pre('findOneAndUpdate', function() {
 	const update = this.getUpdate();
 	if (update.__v != null) {
 		delete update.__v;
@@ -38,6 +40,6 @@ DistinctTasksSchema.pre('findOneAndUpdate', function() {
 	update.$inc.__v = 1;
 });
 
-const DistinctTasks = mongoose.model('DistinctTasks', DistinctTasksSchema);
+const Tasks = mongoose.model('DistinctTasks', TasksSchema);
 
-module.exports = DistinctTasks;
+module.exports = Tasks;
