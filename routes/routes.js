@@ -11,13 +11,39 @@ const passportUserCheck = passport.authenticate('jwt', {
 });
 
 router.post('/auth', userController.getUser);
+// router.post('/auth', userController.getUser);
 
 router.get('/tasks/default', defaultTasksController.getDefaultTasks);
-router.post('/tasks/default', defaultTasksController.createDefaultTask);
 router.get('/tasks/default/:id', defaultTasksController.getDefaultTask);
+router.post('/tasks/default', defaultTasksController.createDefaultTask);
 router.put('/tasks/default/:id', defaultTasksController.updateDefaultTask);
 router.delete('/tasks/default/:id', defaultTasksController.deleteDefaultTask);
 
-router.get('/tasks', passportUserCheck, taskController.getTasks);
+router.get('/tasks', taskController.getTasks);
+router.get('/tasks/:id', taskController.getTask);
+router.post('/tasks', taskController.createTask);
+router.put('/tasks/:id', taskController.updateTask);
+router.put('/tasks/:id', taskController.deleteTask);
+
+// router.get('/tasks', passportUserCheck, taskController.getTasks);
+// router.get('/tasks/:id', passportUserCheck, taskController.getTask);
+// router.post('/tasks/:id', passportUserCheck, taskController.createTask);
+// router.put('/tasks/:id', passportUserCheck, taskController.updateTask);
+// router.put('/tasks/:id', passportUserCheck, taskController.deleteTask);
 
 module.exports = router;
+
+/*
+test user
+{
+"email":"testUser@testUser.com",
+"nickname":"testUser",
+"password":"password"
+}
+{
+		"nickname": "testuser",
+		
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZGE3ZjFhMmI0ZmFhODMyZDg2MzQ2YTUiLCJpYXQiOjE1NzEyODc0NTh9.xefwWHj0hvC42yqJuhFJ7ivzqsmjpDjv8bur9YXWq78"
+}
+
+*/

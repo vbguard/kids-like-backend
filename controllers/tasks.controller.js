@@ -5,9 +5,72 @@
 const Tasks = require('../models/tasks.model');
 const Users = require('../models/user.model');
 
+const getTasks = (req, res) => {
+	// console.log('inside getTasks');
+	Tasks.find({})
+		.then(result => res.json({result}))
+		.catch(err => {
+			throw new Error(err);
+		});
+};
+
+const getTask = (req, res) => {
+	const idForSearch = req.params.id;
+
+	Tasks.find({_id: idForSearch})
+		.then(result => res.json({result}))
+		.catch(err => {
+			throw new Error(err);
+		});
+};
+
+const createTask = (req, res) => {
+	const taskData = req.body;
+
+	const newTask = new Tasks(taskData);
+
+	newTask
+		.save()
+		.then(result => res.json({result}))
+		.catch(err => {
+			throw new Error(err);
+		});
+};
+
 const updateTask = (req, res) => {
-  const taskId = req.params.taskId;
-  
+	const idForUpdate = req.params.id;
+	const taskForUpdate = req.body;
+
+	Tasks.findOneAndReplace({_id: idForUpdate}, taskForUpdate)
+		.then(result => res.json({result}))
+		.catch(err => {
+			throw new Error(err);
+		});
+};
+
+const deleteTask = (req, res) => {
+	const idForDelete = req.params.id;
+
+	Tasks.findOneAndDelete({_id: idForDelete})
+		.then(result => res.json({result}))
+		.catch(err => {
+			throw new Error(err);
+		});
+};
+
+module.exports = {
+	getTasks,
+	getTask,
+	createTask,
+	updateTask,
+	deleteTask
+	// getTasksSup
+};
+
+/*
+const updateTask = (req, res) => {
+	const taskId = req.params.taskId;
+
 	if (req.body.isComplete) {
 		const taskDayId = req.body.taskDayId;
 		return Tasks.findOneAndUpdate(
@@ -16,8 +79,8 @@ const updateTask = (req, res) => {
 			//{arrayFilters: [{element: {$gte: 100}}]},
 			{$set: {'dates.$[elem].isComplete': req.body.isComplete}},
 			{
-        arrayFilters: [{'elem._id': taskDayId}],
-        new: true
+				arrayFilters: [{'elem._id': taskDayId}],
+				new: true
 			}
 		)
 			.then(result => {
@@ -31,13 +94,15 @@ const updateTask = (req, res) => {
 					.status(400)
 					.json({success: false, error: err, message: err.message});
 			});
-  }
+	}
 
-  Tasks.findOneAndUpdate({_id: taskId}, {$set: {...req.body}}, {new:true}).then(result => {
-    return res.json({ status: "OK", task: result})
-  }).catch(err => res
-    .status(400)
-    .json({success: false, error: err, message: err.message}))
+	Tasks.findOneAndUpdate({_id: taskId}, {$set: {...req.body}}, {new: true})
+		.then(result => {
+			return res.json({status: 'OK', task: result});
+		})
+		.catch(err =>
+			res.status(400).json({success: false, error: err, message: err.message})
+		);
 
 	//	Tasks.findOneAndUpdate({_id: taskId}, {$set: newFields}, {new: true})
 	//	.then(result => {
@@ -350,10 +415,4 @@ const getTasksSup = async (req, res) => {
 	}
 };
 
-module.exports = {
-	getTasks,
-	updateTask,
-	createTask,
-	deleteTask,
-	getTasksSup
-};
+*/

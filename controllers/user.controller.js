@@ -103,6 +103,7 @@ const getUser = (req, res) => {
 								.status(200)
 								.json({
 									nickname: user.nickname,
+									userId: user._id,
 									token
 								})
 								.end();
