@@ -1,4 +1,5 @@
 const DefaultTasks = require('../models/defaultTasks.model');
+const Joi = require('joi');
 
 const getDefaultTasks = (req, res) => {
 	DefaultTasks.find({})
@@ -9,19 +10,35 @@ const getDefaultTasks = (req, res) => {
 };
 
 const getDefaultTask = (req, res) => {
-	const idForSearch = req.params.id;
+	const taskId = req.params.taskId;
 
-	DefaultTasks.find({_id: idForSearch})
+	DefaultTasks.findById(taskId)
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);
 		});
 };
 
-const createDefaultTask = (req, res) => {
+const createDefaultTask = (req, res, next) => {
 	const taskData = req.body;
+	const schema = Joi.object({
+		cardTitle: Joi.string()
+			.alphanum()
+			.required(),
+		imageUrl: Joi.string()
+			.uri({
+				scheme: ['https']
+			})
+			.required()
+	});
 
-	const newDefaultTask = new DefaultTasks(taskData);
+	const {error, value} = schema.validate(taskData);
+
+	if (error) {
+		return next(error);
+	}
+
+	const newDefaultTask = new DefaultTasks(value);
 
 	newDefaultTask
 		.save()
@@ -35,8 +52,17 @@ const updateDefaultTask = (req, res) => {
 	const idForUpdate = req.params.id;
 	const taskForUpdate = req.body;
 
-	DefaultTasks.findOneAndReplace({_id: idForUpdate}, taskForUpdate)
-		.then(result => res.json({result}))
+	DefaultTasks.findByIdAndUpdate(idForUpdate, {$set: taskForUpdate}, {new: true})
+		.then(result => {
+			if (!result) {
+				return res
+					.status(404)
+					.json({message: `Defaukt tasks by this id ${taskId}, not found`});
+      }
+      if (result) {
+        res.json({result});
+      }
+		})
 		.catch(err => {
 			throw new Error(err);
 		});

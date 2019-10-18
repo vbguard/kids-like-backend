@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Users = require('../models/user.model');
 
 const TasksSchema = new Schema({
   cardId: {
@@ -45,6 +44,6 @@ TasksSchema.pre('findOneAndUpdate', function () {
   update.$inc.__v = 1;
 });
 
-const Tasks = mongoose.model('DistinctTasks', TasksSchema);
+const Tasks = mongoose.model('Tasks', TasksSchema);
 
 module.exports = Tasks;

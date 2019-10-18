@@ -28,6 +28,6 @@ DefaultTasksSchema.pre('findOneAndUpdate', function() {
 	update.$inc.__v = 1;
 });
 
-const DefaultTasks = mongoose.model('defaultTasks', DefaultTasksSchema);
+const DefaultTasks = mongoose.model('DefaultTasks', DefaultTasksSchema);
 
 module.exports = DefaultTasks;

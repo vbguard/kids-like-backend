@@ -14,7 +14,7 @@ router.post('/auth', userController.getUser);
 // router.post('/auth', userController.getUser);
 
 router.get('/tasks/default', defaultTasksController.getDefaultTasks);
-router.get('/tasks/default/:id', defaultTasksController.getDefaultTask);
+router.get('/tasks/default/:taskId', defaultTasksController.getDefaultTask);
 router.post('/tasks/default', defaultTasksController.createDefaultTask);
 router.put('/tasks/default/:id', defaultTasksController.updateDefaultTask);
 router.delete('/tasks/default/:id', defaultTasksController.deleteDefaultTask);
