@@ -1,11 +1,11 @@
 /* eslint-disable func-names */
 const passport = require('passport');
-const JwtStrategy  = require('passport-jwt').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const LocalStrategy = require('passport-local').Strategy;
 
 const jwtSecretKey = require('../config/config').jwtSecretKey;
-const User = require('../models/user.model');
+const Users = require('../models/user.model');
 
 passport.use(
 	new LocalStrategy(
@@ -48,11 +48,11 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+	done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
+	User.findById(id, (err, user) => {
+		done(err, user);
+	});
 });

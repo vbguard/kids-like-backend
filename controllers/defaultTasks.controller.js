@@ -1,5 +1,23 @@
 const DefaultTasks = require('../models/defaultTasks.model');
 
+const getDefaultTasks = (req, res) => {
+	DefaultTasks.find({})
+		.then(result => res.json({result}))
+		.catch(err => {
+			throw new Error(err);
+		});
+};
+
+const getDefaultTask = (req, res) => {
+	const idForSearch = req.params.id;
+
+	DefaultTasks.find({_id: idForSearch})
+		.then(result => res.json({result}))
+		.catch(err => {
+			throw new Error(err);
+		});
+};
+
 const createDefaultTask = (req, res) => {
 	const taskData = req.body;
 
@@ -13,8 +31,21 @@ const createDefaultTask = (req, res) => {
 		});
 };
 
-const getDefaultTasks = (req, res) => {
-	DefaultTasks.find({})
+const updateDefaultTask = (req, res) => {
+	const idForUpdate = req.params.id;
+	const taskForUpdate = req.body;
+
+	DefaultTasks.findOneAndReplace({_id: idForUpdate}, taskForUpdate)
+		.then(result => res.json({result}))
+		.catch(err => {
+			throw new Error(err);
+		});
+};
+
+const deleteDefaultTask = (req, res) => {
+	const idForDelete = req.params.id;
+
+	DefaultTasks.findOneAndDelete({_id: idForDelete})
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);
@@ -23,5 +54,8 @@ const getDefaultTasks = (req, res) => {
 
 module.exports = {
 	createDefaultTask,
-	getDefaultTasks
+	getDefaultTasks,
+	getDefaultTask,
+	updateDefaultTask,
+	deleteDefaultTask
 };

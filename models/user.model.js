@@ -4,28 +4,28 @@ const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema(
 	{
-    email: {
-      type: String
-    },
+		email: {
+			type: String
+		},
 		nickname: {
-      type: String,
+			type: String,
 			required: true,
 			trim: true,
 			unique: true,
-      index: true,
-      minlength: 5,
-      maxlength: 15,
-      lowercase: true
+			index: true,
+			minlength: 5,
+			maxlength: 15,
+			lowercase: true
 		},
 		password: {
-      type: String,
-      required: true,
-      minlength: 5,
-      maxlength: 12,
-      trim: true
-    },
-    token: String,
-    
+			type: String,
+			required: true,
+			minlength: 5,
+			maxlength: 12,
+			trim: true
+		}
+		// add customTasks,
+		// add weekSet
 	},
 	{timestamps: true}
 );
@@ -54,6 +54,6 @@ UserSchema.methods.comparePassword = function(candidatePassword, next) {
 	});
 };
 
-const User = mongoose.model('Users', UserSchema);
+const Users = mongoose.model('Users', UserSchema);
 
-module.exports = User;
+module.exports = Users;
