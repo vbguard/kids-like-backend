@@ -14,16 +14,25 @@ router.post('/auth', userController.getUser);
 // router.post('/auth', userController.getUser);
 
 router.get('/tasks/default', defaultTasksController.getDefaultTasks);
-router.get('/tasks/default/:id', defaultTasksController.getDefaultTask);
+router.get(
+	'/tasks/default/:defaultTaskId',
+	defaultTasksController.getDefaultTask
+);
 router.post('/tasks/default', defaultTasksController.createDefaultTask);
-router.put('/tasks/default/:id', defaultTasksController.updateDefaultTask);
-router.delete('/tasks/default/:id', defaultTasksController.deleteDefaultTask);
+router.put(
+	'/tasks/default/:defaultTaskId',
+	defaultTasksController.updateDefaultTask
+);
+router.delete(
+	'/tasks/default/:defaultTaskId',
+	defaultTasksController.deleteDefaultTask
+);
 
 router.get('/tasks', taskController.getTasks);
-router.get('/tasks/:id', taskController.getTask);
+router.get('/tasks/:taskId', taskController.getTask);
 router.post('/tasks', taskController.createTask);
-router.put('/tasks/:id', taskController.updateTask);
-router.put('/tasks/:id', taskController.deleteTask);
+router.put('/tasks/:taskId', taskController.updateTask);
+router.delete('/tasks/:taskId', taskController.deleteTask);
 
 // router.get('/tasks', passportUserCheck, taskController.getTasks);
 // router.get('/tasks/:id', passportUserCheck, taskController.getTask);

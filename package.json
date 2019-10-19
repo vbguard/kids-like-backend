@@ -24,6 +24,7 @@
 		"@babel/core": "7.5.5",
 		"@babel/preset-env": "7.5.5",
 		"@babel/preset-react": "7.0.0",
+		"@hapi/joi": "^16.1.7",
 		"bcrypt": "3.0.6",
 		"config": "3.2.2",
 		"cookie-parser": "1.4.4",
