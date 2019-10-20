@@ -1,5 +1,5 @@
 const DefaultTasks = require('../models/defaultTasks.model');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
 const getDefaultTasks = (req, res) => {
 	DefaultTasks.find({})
@@ -10,9 +10,9 @@ const getDefaultTasks = (req, res) => {
 };
 
 const getDefaultTask = (req, res) => {
-	const taskId = req.params.taskId;
+	const defaultTaskId = req.params.defaultTaskId;
 
-	DefaultTasks.findById(taskId)
+	DefaultTasks.findById(defaultTaskId)
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);
@@ -26,6 +26,15 @@ const createDefaultTask = (req, res, next) => {
 			.alphanum()
 			.required(),
 		imageUrl: Joi.string()
+			.uri({
+				scheme: ['https']
+			})
+			.required()
+	});
+
+	const schema = Joi.object({
+		cardTitle: Joi.string().required(),
+		imageUrl: Joi.string
 			.uri({
 				scheme: ['https']
 			})
@@ -49,20 +58,30 @@ const createDefaultTask = (req, res, next) => {
 };
 
 const updateDefaultTask = (req, res) => {
-	const idForUpdate = req.params.id;
+	const defaultTaskId = req.params.defaultTaskId;
 	const taskForUpdate = req.body;
 
-	DefaultTasks.findByIdAndUpdate(idForUpdate, {$set: taskForUpdate}, { new: true })
+	const schema = Joi.object({
+		cardTitle: Joi.string().required(),
+		imageUrl: Joi.string
+			.uri({
+				scheme: ['https']
+			})
+			.required()
+	});
+	const {error, value} = schema.validate(taskForUpdate);
+	if (error) {
+		return next(error);
+	}
+
+	DefaultTasks.findByIdAndUpdate({_id: defaultTaskId}, {$set: value})
 		.then(result => {
 			if (!result) {
 				return res
 					.status(404)
-					.json({message: `Defaukt tasks by this id ${taskId}, not found`});
-      }
-      
-      if (result) {
-        res.json({result});
-      }
+					.json({message: `Default task with id ${defaultTaskId} not found`});
+			}
+			res.json({result});
 		})
 		.catch(err => {
 			throw new Error(err);
@@ -70,9 +89,9 @@ const updateDefaultTask = (req, res) => {
 };
 
 const deleteDefaultTask = (req, res) => {
-	const idForDelete = req.params.id;
+	const defaultTaskId = req.params.defaultTaskId;
 
-	DefaultTasks.findOneAndDelete({_id: idForDelete})
+	DefaultTasks.findByIdAndDelete(defaultTaskId)
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);

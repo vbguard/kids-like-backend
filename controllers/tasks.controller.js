@@ -4,6 +4,7 @@
 //!
 const Tasks = require('../models/tasks.model');
 const Users = require('../models/user.model');
+// const Joi = require('joi');
 
 const getTasks = (req, res) => {
 	// console.log('inside getTasks');
@@ -15,9 +16,9 @@ const getTasks = (req, res) => {
 };
 
 const getTask = (req, res) => {
-	const idForSearch = req.params.id;
+	const taskId = req.params.taskId;
 
-	Tasks.find({_id: idForSearch})
+	Tasks.findById(taskId)
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);
@@ -27,7 +28,21 @@ const getTask = (req, res) => {
 const createTask = (req, res) => {
 	const taskData = req.body;
 
-	const newTask = new Tasks(taskData);
+	const schema = Joi.object({
+		cardId: Joi.string().required(),
+		isDone: Joi.boolean().required(),
+		point: Joi.number(),
+		date: Joi.date().required(),
+		userId: Joi.string().required()
+	});
+
+	const {error, value} = schema.validate(taskData);
+
+	if (error) {
+		return next(error);
+	}
+
+	const newTask = new Tasks(value);
 
 	newTask
 		.save()
@@ -38,10 +53,22 @@ const createTask = (req, res) => {
 };
 
 const updateTask = (req, res) => {
-	const idForUpdate = req.params.id;
+	const taskId = req.params.taskId;
 	const taskForUpdate = req.body;
 
-	Tasks.findOneAndReplace({_id: idForUpdate}, taskForUpdate)
+	const schema = Joi.object({
+		cardId: Joi.string().required(),
+		isDone: Joi.boolean().required(),
+		point: Joi.number(),
+		date: Joi.date().required(),
+		userId: Joi.string().required()
+	});
+	const {error, value} = schema.validate(taskForUpdate);
+	if (error) {
+		return next(error);
+	}
+
+	Tasks.findByIdAndUpdate({_id: taskId}, {$set: value})
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);
@@ -49,9 +76,9 @@ const updateTask = (req, res) => {
 };
 
 const deleteTask = (req, res) => {
-	const idForDelete = req.params.id;
+	const taskId = req.params.taskId;
 
-	Tasks.findOneAndDelete({_id: idForDelete})
+	Tasks.findByIdAndDelete(taskId)
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);
