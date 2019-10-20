@@ -81,7 +81,7 @@ const updateDefaultTask = (req, res) => {
 const deleteDefaultTask = (req, res) => {
 	const defaultTaskId = req.params.defaultTaskId;
 
-	DefaultTasks.findOneAndDelete({_id: defaultTaskId})
+	DefaultTasks.findByIdAndDelete(defaultTaskId)
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);

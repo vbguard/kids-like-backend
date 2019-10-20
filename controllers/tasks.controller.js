@@ -78,7 +78,7 @@ const updateTask = (req, res) => {
 const deleteTask = (req, res) => {
 	const taskId = req.params.taskId;
 
-	Tasks.findOneAndDelete({_id: taskId})
+	Tasks.findByIdAndDelete(taskId)
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);
