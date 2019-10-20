@@ -10,8 +10,9 @@ const passportUserCheck = passport.authenticate('jwt', {
 	session: false
 });
 
-router.post('/auth', userController.getUser);
-// router.post('/auth', userController.getUser);
+const authRouter = require('./auth.router');
+
+router.use('/auth', authRouter);
 
 router.get('/tasks/default', defaultTasksController.getDefaultTasks);
 router.get(
