@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const DefaultTasksSchema = new Schema({
+const PlanningTasksSchema = new Schema({
 	cardTitle: String,
 	imageUrl: String,
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "Users"
+  }
 });
 
-DefaultTasksSchema.pre('findOneAndUpdate', function() {
+PlanningTasksSchema.pre('findOneAndUpdate', function() {
 	const update = this.getUpdate();
 	if (update.__v != null) {
 		delete update.__v;
@@ -24,6 +28,6 @@ DefaultTasksSchema.pre('findOneAndUpdate', function() {
 	update.$inc.__v = 1;
 });
 
-const DefaultTasks = mongoose.model('DefaultTasks', DefaultTasksSchema);
+const PlanningTasks = mongoose.model('PlanningTasks', PlanningTasksSchema);
 
-module.exports = DefaultTasks;
+module.exports = PlanningTasks;

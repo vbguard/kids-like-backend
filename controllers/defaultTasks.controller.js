@@ -2,7 +2,12 @@ const DefaultTasks = require('../models/defaultTasks.model');
 const Joi = require('@hapi/joi');
 
 const getDefaultTasks = (req, res) => {
-	DefaultTasks.find({})
+  const userId = req.user.id;
+  console.log('userId :', userId);
+	DefaultTasks.aggregate([
+    {$match: {}},
+    {}
+  ])
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);
@@ -21,17 +26,6 @@ const getDefaultTask = (req, res) => {
 
 const createDefaultTask = (req, res, next) => {
 	const taskData = req.body;
-	const schema = Joi.object({
-		cardTitle: Joi.string()
-			.alphanum()
-			.required(),
-		imageUrl: Joi.string()
-			.uri({
-				scheme: ['https']
-			})
-			.required()
-	});
-
 	const schema = Joi.object({
 		cardTitle: Joi.string().required(),
 		imageUrl: Joi.string

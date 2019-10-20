@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const TasksSchema = new Schema({
-  cardId: {
+  task: {
     type: Schema.Types.ObjectId,
-    ref: 'DefaultTasks'
+    ref: 'PlanningTasks'
   },
   isDone: {
     type: Boolean,

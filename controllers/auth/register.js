@@ -1,4 +1,6 @@
 const User = require('../../models/user.model');
+const PlanningTasks = require('../../models/planningTasks.model');
+const DefaultTasks = require('../../models/defaultTasks.model');
 const login = require('./login');
 const Joi = require('@hapi/joi');
 // const {ValidationError} = require('../../core/error');
@@ -20,12 +22,6 @@ const userSignup = (req, res, next) => {
 				.min(5)
 				.max(15)
 				.required()
-			// age: Joi.number()
-			// 	.min(3)
-			// 	.max(99)
-			// 	.required(),
-			// avatar: Joi.string(),
-			// isChild: Joi.boolean()
 		})
 		.options({
 			stripUnknown: true,
@@ -53,11 +49,26 @@ const userSignup = (req, res, next) => {
 	};
 
 	const newUser = new User(result.value);
-
 	newUser
 		.save()
 		.then(() => {
-			login(req, res);
+			DefaultTasks.find({})
+				.then(defaultTasks => {
+					console.log('defaultTasks :', defaultTasks);
+					const defaultTasksWithUserId = defaultTasks.map(task => ({
+						userId: newUser._id,
+						cardTitle: task.cardTitle,
+						imageUrl: task.imageUrl
+					}));
+					PlanningTasks.insertMany(defaultTasksWithUserId)
+						.then(savingPlanTasks => {
+							if (savingPlanTasks) {
+								login(req, res);
+							}
+						})
+						.catch(sendError);
+				})
+				.catch(sendError);
 		})
 		.catch(sendError);
 };

@@ -10,18 +10,33 @@ const Users = require('../models/user.model');
 passport.use(
 	new LocalStrategy(
 		{
-			usernameField: 'user[email]',
-			passwordField: 'user[password]'
+			usernameField: 'email',
+			passwordField: 'password',
+			session: false
 		},
 		(email, password, done) => {
 			Users.findOne({email})
 				.then(user => {
-					if (!user || !user.validatePassword(password)) {
+					if (!user) {
 						return done(null, false, {
-							errors: {'email or password': 'is invalid'}
+							errors: {message: 'Incorrect email or password'}
 						});
 					}
-					return done(null, user);
+					user.comparePassword(password, function(err, isMatch) {
+						if (!isMatch) {
+							return done(null, false, {
+								message: 'Incorrect email or password'
+							});
+						}
+
+						if (isMatch && !err) {
+							user.getJWT();
+							const userData = user.getPublicFields();
+							return done(null, userData, {
+								message: 'Logged In Successfully'
+							});
+						}
+					});
 				})
 				.catch(done);
 		}
@@ -36,7 +51,7 @@ passport.use(
 		},
 		function(jwtPayload, cb) {
 			//find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
-			Users.findById(jwtPayload.userId)
+			Users.findById(jwtPayload.id)
 				.then(user => {
 					return cb(null, user);
 				})

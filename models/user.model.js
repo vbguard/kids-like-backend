@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const config = require("../config/config");
 
 const UserSchema = new Schema({
   email: {
@@ -19,16 +22,24 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true,
-    minlength: 5,
-    maxlength: 12,
     trim: true
   },
   token: String
-  // add customTasks,
-  // add weekSet
 }, {
   timestamps: true
 });
+
+UserSchema.methods.getPublicFields = function() {
+  const returnObject = {
+    userData: {
+      nickname: this.nickname,
+      email: this.email
+
+    },
+    token: this.token
+  };
+  return returnObject;
+};
 
 UserSchema.pre(
   'save',
@@ -52,6 +63,26 @@ UserSchema.methods.comparePassword = function (candidatePassword, next) {
     if (err) return next(err);
     next(null, isMatch);
   });
+};
+
+UserSchema.methods.validatePassword = function(password) {
+  const compare = bcrypt.compareSync(password, this.password);
+  return compare;
+};
+
+UserSchema.methods.getJWT = function() {
+  const preToken = jwt.sign(
+    {
+      id: this._id
+    },
+    config.jwtSecretKey
+  );
+
+  const token = `Bearer ${preToken}`;
+
+  this.token = token;
+  this.save();
+  return token;
 };
 
 const Users = mongoose.model('Users', UserSchema);

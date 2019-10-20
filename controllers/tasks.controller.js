@@ -3,12 +3,73 @@
 //!
 //!
 const Tasks = require('../models/tasks.model');
-const Users = require('../models/user.model');
-// const Joi = require('joi');
+const ObjectId = require('mongoose').Types.ObjectId;
+const moment = require('moment');
+const Joi = require('joi');
 
 const getTasks = (req, res) => {
 	// console.log('inside getTasks');
-	Tasks.find({})
+	const userId = req.user.id;
+
+	// const firstDay = moment().get;
+	// console.log('firstDay :', firstDay);
+	const today = moment().locale('uk', {
+		week: {
+			dow: 1 // Monday is the first day of the week
+		}
+	});
+
+	const fromDate = today
+		.set({hour: 3, minute: 0, second: 0, millisecond: 0})
+		.weekday(0)
+		.toISOString();
+	const toDate = today
+		.set({hour: 23, minute: 59, second: 59})
+		.weekday(6)
+		.toISOString();
+
+	Tasks.aggregate([
+		{$match: {userId: ObjectId(userId)}},
+		{$match: {date: {$gte: new Date(fromDate), $lte: new Date(toDate)}}},
+		{
+			$lookup: {
+				from: 'planningtasks',
+				localField: 'task',
+				foreignField: '_id',
+				as: 'task'
+			}
+		},
+		{
+			$unwind: '$task'
+		},
+		{
+			$project: {
+				_id: true,
+				'task.cardTitle': true,
+				'task.imageUrl': true,
+				isDone: true,
+				point: true,
+				date: true
+			}
+		},
+		{$group: {_id: '$date', dayTasks: {$push: '$$ROOT'}}},
+		{
+			$project: {
+				_id: false,
+				day: {
+					$dateToParts: {date: '$_id', iso8601: true}
+        },
+        dayTasks: true
+			}
+    },
+    {
+			$project: {
+				_id: false,
+				'day': '$day.isoDayOfWeek',
+        dayTasks: true
+			}
+    }
+	])
 		.then(result => res.json({result}))
 		.catch(err => {
 			throw new Error(err);
@@ -27,13 +88,11 @@ const getTask = (req, res) => {
 
 const createTask = (req, res) => {
 	const taskData = req.body;
+	const userId = req.user.id;
 
 	const schema = Joi.object({
-		cardId: Joi.string().required(),
-		isDone: Joi.boolean().required(),
-		point: Joi.number(),
-		date: Joi.date().required(),
-		userId: Joi.string().required()
+		taskId: Joi.string().required(),
+		date: Joi.date().required()
 	});
 
 	const {error, value} = schema.validate(taskData);
@@ -42,7 +101,7 @@ const createTask = (req, res) => {
 		return next(error);
 	}
 
-	const newTask = new Tasks(value);
+	const newTask = new Tasks({task: value.taskId, date: value.date, userId});
 
 	newTask
 		.save()

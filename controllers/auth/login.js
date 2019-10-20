@@ -6,15 +6,15 @@ const Joi = require('@hapi/joi');
 const userLogin = (req, res, next) => {
 	const schema = Joi.object()
 		.keys({
-			// email: Joi.string()
-			// 	.regex(
-			// 		/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-			// 	)
-			// 	.required(),
-			nickname: Joi.string()
-				.required()
-				.min(5)
-				.max(15),
+			email: Joi.string()
+				.regex(
+					/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+				)
+				.required(),
+			// nickname: Joi.string()
+			// 	.required()
+			// 	.min(5)
+			// 	.max(15),
 			password: Joi.string()
 				.required()
 				.min(6)
@@ -31,10 +31,6 @@ const userLogin = (req, res, next) => {
 	if (result.error) {
 		return next(result.error);
 	}
-
-	// if (result.error) {
-	// 	throw new ValidationError(result.error.message);
-	// }
 
 	const sendResponse = user => {
 		res.json({
@@ -70,7 +66,10 @@ const userLogin = (req, res, next) => {
 				err => {
 					if (err) {
 						res.send(err);
-					}
+          }
+          // const token = user.getJwt();
+          // user.token = token;
+          // console.log(token);
 					sendResponse(user);
 				}
 			);

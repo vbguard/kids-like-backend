@@ -4,6 +4,7 @@ const passport = require('passport');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const session = require('express-session');
 const sassMiddleware = require('node-sass-middleware');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
@@ -36,29 +37,43 @@ app.use(logger('dev'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(cookieParser());
+app.use(cookieParser()).use(
+	session({
+		secret: 'super-secret-key',
+		resave: false,
+		saveUninitialized: false,
+		cookie: {maxAge: 60000}
+	})
+);
 
 // Set Secure to Server
 app.disable('x-powered-by');
 app.use(cors('*'));
-app.use(
-	sassMiddleware({
-		src: path.join(__dirname, 'public'),
-		dest: path.join(__dirname, 'public'),
-		indentedSyntax: true, // true = .sass and false = .scss
-		sourceMap: true
-	})
-);
-
-app.use(express.static(path.join(__dirname, 'public')));
+app
+	.use(
+		sassMiddleware({
+			src: path.join(__dirname, 'public'),
+			dest: path.join(__dirname, 'public'),
+			indentedSyntax: true, // true = .sass and false = .scss
+			sourceMap: true
+		})
+	)
+	.use(passport.initialize())
+	.use(passport.session());
 
 require('./config/passport');
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
 	res.render('index', {name: 'John'});
 });
 app.use('/api/v1', router);
-app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { customeSiteTitle: "Kids-Like"}));
+app.use(
+	'/doc',
+	swaggerUi.serve,
+	swaggerUi.setup(swaggerDocument, {customeSiteTitle: 'Kids-Like'})
+);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -67,9 +82,9 @@ app.use((req, res, next) => {
 
 // error handler
 app.use((err, req, res) => {
-  console.log('err :', err);
-  // set locals, only providing error in development
-  console.log('Error Call');
+	console.log('err :', err);
+	// set locals, only providing error in development
+	console.log('Error Call');
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
