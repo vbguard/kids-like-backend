@@ -52,13 +52,14 @@ const updateDefaultTask = (req, res) => {
 	const idForUpdate = req.params.id;
 	const taskForUpdate = req.body;
 
-	DefaultTasks.findByIdAndUpdate(idForUpdate, {$set: taskForUpdate}, {new: true})
+	DefaultTasks.findByIdAndUpdate(idForUpdate, {$set: taskForUpdate}, { new: true })
 		.then(result => {
 			if (!result) {
 				return res
 					.status(404)
 					.json({message: `Defaukt tasks by this id ${taskId}, not found`});
       }
+      
       if (result) {
         res.json({result});
       }
