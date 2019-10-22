@@ -4,8 +4,9 @@ exports.getTasks = (req, res) => {
 	const userId = req.user.id;
 	PlanningTasks.find({userId})
 		.select({__v: 0})
+		.select({userId: 0})
 		.then(result => {
-			res.json({status: 'OK', planningTasks: result });
+			res.json({status: 'OK', planningTasks: result});
 		})
 		.catch(err => {
 			throw new Error(err);

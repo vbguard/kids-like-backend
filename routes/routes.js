@@ -13,9 +13,19 @@ const passportUserCheck = passport.authenticate('jwt', {
 const authRouter = require('./auth.router');
 
 router.use('/auth', authRouter);
+// router.use('/auth', authRouter);git status
 
-router.get('/tasks/planning', passportUserCheck, taskPlanningController.getTasks);
-router.get('/tasks/default', passportUserCheck, defaultTasksController.getDefaultTasks);
+router.get(
+	'/tasks/planning',
+	passportUserCheck,
+	taskPlanningController.getTasks
+);
+
+router.get(
+	'/tasks/default',
+	passportUserCheck,
+	defaultTasksController.getDefaultTasks
+);
 router.get(
 	'/tasks/default/:defaultTaskId',
 	defaultTasksController.getDefaultTask
@@ -35,7 +45,6 @@ router.get('/tasks/:taskId', taskController.getTask);
 router.post('/tasks', passportUserCheck, taskController.createTask);
 router.put('/tasks/:taskId', taskController.updateTask);
 router.delete('/tasks/:taskId', taskController.deleteTask);
-
 
 // router.get('/tasks', passportUserCheck, taskController.getTasks);
 // router.get('/tasks/:id', passportUserCheck, taskController.getTask);
