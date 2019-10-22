@@ -7,27 +7,29 @@ const taskController = require('../controllers/tasks.controller');
 const defaultTasksController = require('../controllers/defaultTasks.controller');
 const taskPlanningController = require('../controllers/taskPlanning.controller');
 const passportUserCheck = passport.authenticate('jwt', {
-	session: false
+  session: false
 });
 
 const authRouter = require('./auth.router');
 
 router.use('/auth', authRouter);
 
+router.post('/tasks/planning', passportUserCheck, taskPlanningController.postTasks);
 router.get('/tasks/planning', passportUserCheck, taskPlanningController.getTasks);
+
 router.get('/tasks/default', passportUserCheck, defaultTasksController.getDefaultTasks);
 router.get(
-	'/tasks/default/:defaultTaskId',
-	defaultTasksController.getDefaultTask
+  '/tasks/default/:defaultTaskId',
+  defaultTasksController.getDefaultTask
 );
 router.post('/tasks/default', defaultTasksController.createDefaultTask);
 router.put(
-	'/tasks/default/:defaultTaskId',
-	defaultTasksController.updateDefaultTask
+  '/tasks/default/:defaultTaskId',
+  defaultTasksController.updateDefaultTask
 );
 router.delete(
-	'/tasks/default/:defaultTaskId',
-	defaultTasksController.deleteDefaultTask
+  '/tasks/default/:defaultTaskId',
+  defaultTasksController.deleteDefaultTask
 );
 
 router.get('/tasks', passportUserCheck, taskController.getTasks);
