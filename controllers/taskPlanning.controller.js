@@ -109,7 +109,7 @@ const getPlannedTasks = (req, res) => {
       $match: {
         date: {
           $gte: new Date(fromDate),
-          $lte: new Date(toDate)
+          $lte: new Date(today)
         }
       }
     },
