@@ -15,7 +15,7 @@ const authRouter = require('./auth.router');
 router.use('/auth', authRouter);
 
 router.post('/tasks/planning', passportUserCheck, taskPlanningController.postTasks);
-router.get('/tasks/planning', passportUserCheck, taskPlanningController.getTasks);
+router.get('/tasks/planning', passportUserCheck, taskPlanningController.getPlannedTasks);
 
 router.get('/tasks/default', passportUserCheck, defaultTasksController.getDefaultTasks);
 router.get(
