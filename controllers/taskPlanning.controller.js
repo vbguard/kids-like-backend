@@ -15,9 +15,27 @@ const getTasks = (req, res) => {
 
 const createPlanningTask = (req, res) => {
   const userId = req.user.id;
-  // Add Joi validation
+  const taskData = req.body;
 
-  PlanningTasks.create({userId, cardTitle, imageUrl})
+  const schema = Joi.object({
+    cardTitle: Joi.string().required(),
+    imageUrl: Joi.string
+      .uri({
+        scheme: ['https']
+      })
+      .required()
+  });
+
+  const {
+    error,
+    value
+  } = schema.validate(taskData);
+
+  if (error) {
+    return next(error);
+  }
+
+  PlanningTasks.create({userId, cardTitle: value.cardTitle, imageUrl: value.imageUrl})
   .select({__v: 0, userId: 0})
   .then(result => {
     res.json({status: 'OK', planningTasks: result});
