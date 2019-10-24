@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PlanningTasksSchema = new Schema({
-	cardTitle: String,
+	cardTitle: {
+    type: String,
+    unique: true,
+    index: true
+  },
 	imageUrl: String,
   userId: {
     type: Schema.Types.ObjectId,

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
-const userController = require('../controllers/user.controller');
+// const userController = require('../controllers/user.controller');
 const taskController = require('../controllers/tasks.controller');
 const defaultTasksController = require('../controllers/defaultTasks.controller');
 const taskPlanningController = require('../controllers/taskPlanning.controller');
@@ -14,36 +14,30 @@ const authRouter = require('./auth.router');
 
 router.use('/auth', authRouter);
 
-router.post('/tasks/planning', passportUserCheck, taskPlanningController.postTasks);
-router.get('/tasks/planning', passportUserCheck, taskPlanningController.getPlannedTasks);
+router.post('/tasks/planning', passportUserCheck, taskPlanningController.createPlanningTask);
+router.get('/tasks/planning', passportUserCheck, taskPlanningController.getTasks);
 
 router.get('/tasks/default', passportUserCheck, defaultTasksController.getDefaultTasks);
 router.get(
-  '/tasks/default/:defaultTaskId',
+  '/tasks/default/:defaultTaskId', passportUserCheck,
   defaultTasksController.getDefaultTask
 );
-router.post('/tasks/default', defaultTasksController.createDefaultTask);
+router.post('/tasks/default', passportUserCheck, defaultTasksController.createDefaultTask);
 router.put(
-  '/tasks/default/:defaultTaskId',
+  '/tasks/default/:defaultTaskId', passportUserCheck,
   defaultTasksController.updateDefaultTask
 );
 router.delete(
-  '/tasks/default/:defaultTaskId',
+  '/tasks/default/:defaultTaskId', passportUserCheck,
   defaultTasksController.deleteDefaultTask
 );
 
 router.get('/tasks', passportUserCheck, taskController.getTasks);
-router.get('/tasks/:taskId', taskController.getTask);
-router.post('/tasks', passportUserCheck, taskController.createTask);
-router.put('/tasks/:taskId', taskController.updateTask);
-router.delete('/tasks/:taskId', taskController.deleteTask);
-
-
-// router.get('/tasks', passportUserCheck, taskController.getTasks);
-// router.get('/tasks/:id', passportUserCheck, taskController.getTask);
-// router.post('/tasks/:id', passportUserCheck, taskController.createTask);
-// router.put('/tasks/:id', passportUserCheck, taskController.updateTask);
-// router.put('/tasks/:id', passportUserCheck, taskController.deleteTask);
+router.get('/tasks/:taskId', passportUserCheck, taskController.getTask);
+router.post('/tasks', passportUserCheck, taskController.postTasks);
+router.post('/tasks/create/one', passportUserCheck, taskController.createTask);
+router.patch('/tasks/:taskId', passportUserCheck, taskController.updateTask);
+router.delete('/tasks/:taskId', passportUserCheck, taskController.deleteTask);
 
 module.exports = router;
 
