@@ -6,6 +6,7 @@ const userController = require('../controllers/user.controller');
 const taskController = require('../controllers/tasks.controller');
 const defaultTasksController = require('../controllers/defaultTasks.controller');
 const taskPlanningController = require('../controllers/taskPlanning.controller');
+const customeTaskController = require('../controllers/customeTaskController');
 const passportUserCheck = passport.authenticate('jwt', {
   session: false
 });
@@ -16,6 +17,8 @@ router.use('/auth', authRouter);
 
 router.post('/tasks/planning', passportUserCheck, taskPlanningController.postTasks);
 router.get('/tasks/planning', passportUserCheck, taskPlanningController.getPlannedTasks);
+
+router.post('/tasks/custome', passportUserCheck, customeTaskController.customeTaskCreate);
 
 router.get('/tasks/default', passportUserCheck, defaultTasksController.getDefaultTasks);
 router.get(
