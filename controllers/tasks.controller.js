@@ -45,19 +45,7 @@ const getTasks = (req, res) => {
 		{
 			$addFields: {
 				cardTitle: '$task.cardTitle',
-				imageUrl: '$task.imageUrl',
-				// totalAmount: {
-				// 	$sum: '$point'
-				// },
-				// totalDone: {
-				// 	$sum: {
-				// 		$cond: {
-				// 			if: '$isDone',
-				// 			then: 1,
-				// 			else: 0
-				// 		}
-				// 	}
-				// }
+				imageUrl: '$task.imageUrl'
 			}
 		},
 		{
@@ -67,25 +55,13 @@ const getTasks = (req, res) => {
 				cardTitle: true,
 				imageUrl: true,
 				isDone: true,
-				point: true,
-				// totalDone: true,
-				// totalAmount: true
+				point: true
 			}
 		},
 		{
 			$group: {
 				_id: '$date',
 				dayTasks: {$push: '$$ROOT'},
-				// totalAmount: {$sum: '$point'},
-				// totalDone: {
-				// 	$sum: {
-				// 		$cond: {
-				// 			if: '$isDone',
-				// 			then: 1,
-				// 			else: 0
-				// 		}
-				// 	}
-				// }
 			}
 		},
 		{
@@ -95,8 +71,6 @@ const getTasks = (req, res) => {
 					$dateToParts: {date: '$_id', iso8601: true}
 				},
 				dayTasks: true,
-				// totalAmount: true,
-				// totalDone: true
 			}
 		},
 		{
@@ -108,8 +82,6 @@ const getTasks = (req, res) => {
 				'dayTasks.imageUrl': true,
 				'dayTasks.isDone': true,
 				'dayTasks.point': true,
-				// totalAmount: true,
-				// totalDone: true
 			}
     },
     {$sort: {
@@ -164,13 +136,7 @@ const getTasks = (req, res) => {
 				totalAmount: {$sum: '$totalAmount'},
 				totalDone: {$sum: '$totalDone'}
 			}
-    },
-    // {
-    //   $project: {
-    //     '_id': false,
-    //     tasks: true
-    //   }
-    // }
+    }
 	])
     .then(result => {
 			res.json({
@@ -179,7 +145,6 @@ const getTasks = (req, res) => {
 					fromDate: fromDate,
 					toDate: toDate
         },
-        // result,
 				tasks: result[0].tasks,
 				totalAmount: result[0].totalAmount,
 				totalDone: result[0].totalDone
