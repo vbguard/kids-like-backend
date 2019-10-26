@@ -38,7 +38,7 @@ const createPlanningTask = (req, res) => {
   PlanningTasks.create({userId, cardTitle: value.cardTitle, imageUrl: value.imageUrl})
   .select({__v: 0, userId: 0})
   .then(result => {
-    res.json({status: 'OK', planningTasks: result});
+    res.json({status: 'OK', planningTask: result});
   })
   .catch(err => {
     throw new Error(err);
