@@ -1,7 +1,7 @@
 const DefaultTasks = require('../models/defaultTasks.model');
 const Joi = require('@hapi/joi');
 
-const customeTaskCreate = (req, res, next) => {
+const customTaskCreate = (req, res, next) => {
   const taskData = req.body;
 
   const schema = Joi.object({
@@ -35,5 +35,5 @@ const customeTaskCreate = (req, res, next) => {
     });
 };
 module.exports = {
-  customeTaskCreate,
+  customTaskCreate,
 };
