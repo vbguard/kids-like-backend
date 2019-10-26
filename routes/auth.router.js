@@ -2,7 +2,7 @@ const router = require('express').Router();
 const passport = require('passport');
 const User = require('../models/user.model');
 
-const {login, register, logOut} = require('../controllers/auth');
+const {login, register, logOut, me} = require('../controllers/auth');
 
 const passportCheck = passport.authenticate('jwt', {
 	session: false
@@ -13,7 +13,8 @@ router
 		User.find({}).then(result => {
 			res.json(result);
 		});
-	})
+  })
+  .get('/me', passportCheck, me)
 	.post('/login', login)
 	.post('/register', register)
 	.post('/logout', passportCheck, logOut);
