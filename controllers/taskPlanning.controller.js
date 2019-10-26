@@ -35,8 +35,7 @@ const createPlanningTask = (req, res) => {
     return next(error);
   }
 
-  PlanningTasks.insertOne({userId, cardTitle: value.cardTitle, imageUrl: value.imageUrl})
-  .select({__v: 0, userId: 0})
+  PlanningTasks.create({userId, cardTitle: value.cardTitle, imageUrl: value.imageUrl})
   .then(result => {
     res.json({status: 'OK', planningTask: result});
   })

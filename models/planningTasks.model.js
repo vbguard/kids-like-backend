@@ -14,6 +14,14 @@ const PlanningTasksSchema = new Schema({
   }
 });
 
+PlanningTasksSchema.methods.getPublicFields = function() {
+  const returnObject = {
+    cardTitle: this.cardTitle,
+    imageUrl: this.imageUrl
+  };
+  return returnObject;
+};
+
 PlanningTasksSchema.pre('findOneAndUpdate', function() {
 	const update = this.getUpdate();
 	if (update.__v != null) {
