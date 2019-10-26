@@ -6,7 +6,7 @@ const customTaskCreate = (req, res, next) => {
 
   const schema = Joi.object({
     cardTitle: Joi.string().required(),
-    imageUrl: Joi.string
+    imageUrl: Joi.string()
       .uri({
         scheme: ['https']
       })
