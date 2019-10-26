@@ -19,7 +19,7 @@ const createPlanningTask = (req, res) => {
 
   const schema = Joi.object({
     cardTitle: Joi.string().required(),
-    imageUrl: Joi.string
+    imageUrl: Joi.string()
       .uri({
         scheme: ['https']
       })

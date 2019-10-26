@@ -3,6 +3,7 @@ const Joi = require('@hapi/joi');
 
 const customTaskCreate = (req, res, next) => {
   const taskData = req.body;
+  const userId = req.user.id;
 
   const schema = Joi.object({
     cardTitle: Joi.string().required(),
@@ -22,7 +23,7 @@ const customTaskCreate = (req, res, next) => {
     return next(error);
   }
 
-  const newCustomeTask = new DefaultTasks(value);
+  const newCustomeTask = new DefaultTasks({...value, userId});
 
   newCustomeTask
     .save()
