@@ -63,7 +63,7 @@ app
 
 require('./config/passport');
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'static')));
 
 app.get('/', (req, res) => {
 	res.render('index', {name: 'John'});
