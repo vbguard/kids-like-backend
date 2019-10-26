@@ -61,7 +61,7 @@ const getTasks = (req, res) => {
 		{
 			$group: {
 				_id: '$date',
-				dayTasks: {$push: '$$ROOT'},
+				dayTasks: {$push: '$$ROOT'}
 			}
 		},
 		{
@@ -70,40 +70,46 @@ const getTasks = (req, res) => {
 				day: {
 					$dateToParts: {date: '$_id', iso8601: true}
 				},
-				dayTasks: true,
+				dayTasks: true
 			}
 		},
 		{
 			$project: {
 				_id: false,
-        day: '$day.isoDayOfWeek',
+				day: '$day.isoDayOfWeek',
 				'dayTasks._id': true,
 				'dayTasks.cardTitle': true,
 				'dayTasks.imageUrl': true,
 				'dayTasks.isDone': true,
-				'dayTasks.point': true,
+				'dayTasks.point': true
 			}
-    },
-    {$sort: {
-      'day': 1
-    }},
-    {
-      $group: {
-        '_id': '$day',
-        dayTasks: {$addToSet: '$dayTasks'}
-      }
-    },
-    {$sort: {
-      '_id': 1
-    }},
-    {$project: {
-      '_id': false,
-      day: '$_id',
-      dayTasks: true
-    }},
-    {$unwind: '$dayTasks'},
-    {$unwind: '$dayTasks'},
-    {
+		},
+		{
+			$sort: {
+				day: 1
+			}
+		},
+		{
+			$group: {
+				_id: '$day',
+				dayTasks: {$addToSet: '$dayTasks'}
+			}
+		},
+		{
+			$sort: {
+				_id: 1
+			}
+		},
+		{
+			$project: {
+				_id: false,
+				day: '$_id',
+				dayTasks: true
+			}
+		},
+		{$unwind: '$dayTasks'},
+		{$unwind: '$dayTasks'},
+		{
 			$group: {
 				_id: '$day',
 				dayTasks: {$push: '$dayTasks'},
@@ -118,17 +124,21 @@ const getTasks = (req, res) => {
 					}
 				}
 			}
-    },
-    {$project: {
-      '_id': false,
-      day: '$_id',
-      dayTasks: true,
-      totalAmount: true,
-      totalDone: true
-    }},
-    {$sort: {
-      'day': 1
-    }},
+		},
+		{
+			$project: {
+				_id: false,
+				day: '$_id',
+				dayTasks: true,
+				totalAmount: true,
+				totalDone: true
+			}
+		},
+		{
+			$sort: {
+				day: 1
+			}
+		},
 		{
 			$group: {
 				_id: false,
@@ -136,20 +146,34 @@ const getTasks = (req, res) => {
 				totalAmount: {$sum: '$totalAmount'},
 				totalDone: {$sum: '$totalDone'}
 			}
-    }
+		}
 	])
-    .then(result => {
-			res.json({
-				today: today,
-				weekRange: {
-					fromDate: fromDate,
-					toDate: toDate
-        },
-				tasks: result[0].tasks,
-				totalAmount: result[0].totalAmount,
-				totalDone: result[0].totalDone
-			})
-    })
+		.then(result => {
+			if (result.length === 0) {
+				res.json({
+					today: today,
+					weekRange: {
+						fromDate: fromDate,
+						toDate: toDate
+					},
+					tasks: [],
+					totalAmount: 0,
+					totalDone: 0
+				});
+			} else {
+        res.json({
+          today: today,
+          weekRange: {
+            fromDate: fromDate,
+            toDate: toDate
+          },
+          tasks: result[0].tasks,
+          totalAmount: result[0].totalAmount,
+          totalDone: result[0].totalDone
+        });
+      }
+			
+		})
 		.catch(err => {
 			throw new Error(err);
 		});
@@ -218,7 +242,7 @@ const createTask = (req, res) => {
 };
 
 const updateTask = (req, res) => {
-  const userId = req.user.id;
+	const userId = req.user.id;
 	const taskId = req.params.taskId;
 	const taskForUpdate = req.body;
 
@@ -260,38 +284,44 @@ const updateTask = (req, res) => {
 			const toDate = today
 				.set({hour: 23, minute: 59, second: 59})
 				.weekday(6)
-        .toISOString();
-      
+				.toISOString();
+
 			Tasks.aggregate([
 				{$match: {userId: ObjectId(userId)}},
 				{$match: {date: {$gte: new Date(fromDate), $lte: new Date(toDate)}}},
-        {$group: {
-          '_id': false,
-          totalAmount: { $sum: '$point'},
-          totalDone: {$sum: {
-            $cond: {
-              if: "$isDone",
-              then: 1,
-              else: 0
-            }
-          }}
-        }}
-      ]).then(aggregate => {
-        res.json({
-          status: 'OK',
-          totalAmount: aggregate[0].totalAmount,
-          totalDone: aggregate[0].totalDone,
-          updatedTasks: {
-            _id: result._id,
-            isDone: result.isDone,
-            point: result.point,
-            cardTitle: result.task.cardTitle,
-            imageUrl: result.task.imageUrl
-          }
-        });
-      }).catch(err => {
-        throw new Error(err);
-      });
+				{
+					$group: {
+						_id: false,
+						totalAmount: {$sum: '$point'},
+						totalDone: {
+							$sum: {
+								$cond: {
+									if: '$isDone',
+									then: 1,
+									else: 0
+								}
+							}
+						}
+					}
+				}
+			])
+				.then(aggregate => {
+					res.json({
+						status: 'OK',
+						totalAmount: aggregate[0].totalAmount,
+						totalDone: aggregate[0].totalDone,
+						updatedTasks: {
+							_id: result._id,
+							isDone: result.isDone,
+							point: result.point,
+							cardTitle: result.task.cardTitle,
+							imageUrl: result.task.imageUrl
+						}
+					});
+				})
+				.catch(err => {
+					throw new Error(err);
+				});
 		})
 		.catch(err => {
 			throw new Error(err);
