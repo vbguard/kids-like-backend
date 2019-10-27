@@ -34,7 +34,7 @@ router.delete(
   '/tasks/default/:defaultTaskId', passportUserCheck,
   defaultTasksController.deleteDefaultTask
 );
-
+router.post('/tasks/planning/week', passportUserCheck, taskController.createTasks);
 router.get('/tasks', passportUserCheck, taskController.getTasks);
 router.get('/tasks/:taskId', passportUserCheck, taskController.getTask);
 router.post('/tasks', passportUserCheck, taskController.postTasks);

@@ -149,6 +149,8 @@ const getTasks = (req, res) => {
 		}
 	])
 		.then(result => {
+			console.log('result :', result);
+
 			if (result.length === 0) {
 				res.json({
 					today: today,
@@ -161,18 +163,17 @@ const getTasks = (req, res) => {
 					totalDone: 0
 				});
 			} else {
-        res.json({
-          today: today,
-          weekRange: {
-            fromDate: fromDate,
-            toDate: toDate
-          },
-          tasks: result[0].tasks,
-          totalAmount: result[0].totalAmount,
-          totalDone: result[0].totalDone
-        });
-      }
-			
+				res.json({
+					today: today,
+					weekRange: {
+						fromDate: fromDate,
+						toDate: toDate
+					},
+					tasks: result[0].tasks,
+					totalAmount: result[0].totalAmount,
+					totalDone: result[0].totalDone
+				});
+			}
 		})
 		.catch(err => {
 			throw new Error(err);
@@ -338,11 +339,44 @@ const deleteTask = (req, res) => {
 		});
 };
 
+const createTasks = (req, res) => {
+	// console.log('req.body.tasks', req.body.tasks)
+	const tasksFromReq = req.body.tasks;
+	const userId = req.user.id;
+	const taskDaysArr = [];
+	tasksFromReq.map(({taskId, selectedDays}) => {
+		selectedDays.map(day => {
+			return taskDaysArr.push({
+				userId,
+				task: taskId,
+				date: moment(day, ['MM-DD-YYYY', 'DD-MM', 'DD-MM-YYYY'])
+			});
+		});
+	});
+	// console.log('taskDaysArr', taskDaysArr)
+	Tasks.insertMany(taskDaysArr)
+		.then(result => {
+			res.json({
+				status: 'OK',
+				planningTasks: result
+			});
+		})
+		.catch(err => {
+			res.status(400).json({
+				status: 'BAD',
+				error: err,
+				message: err.message
+			});
+		});
+	// console.log('taskDaysArr', taskDaysArr)
+};
+
 module.exports = {
 	getTasks,
 	getTask,
 	createTask,
 	updateTask,
 	deleteTask,
-	postTasks
+  postTasks,
+  createTasks
 };
