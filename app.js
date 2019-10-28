@@ -75,7 +75,7 @@ app.use(
 	swaggerUi.setup(swaggerDocument, {customeSiteTitle: 'Kids-Like'})
   );
   
-app.get('*', express.static(path.join(__dirname, 'static')));
+app.use('*', express.static(path.join(__dirname, 'static')));
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
 	next(createError(404));
