@@ -349,7 +349,7 @@ const createTasks = (req, res) => {
 			return taskDaysArr.push({
 				userId,
 				task: taskId,
-				date: moment(day, ['MM-DD-YYYY', 'DD-MM', 'DD-MM-YYYY'])
+				date: new Date(moment(day, ['MM-DD-YYYY', 'DD-MM', 'DD-MM-YYYY']))
 			});
 		});
 	});
@@ -377,6 +377,6 @@ module.exports = {
 	createTask,
 	updateTask,
 	deleteTask,
-  postTasks,
-  createTasks
+	postTasks,
+	createTasks
 };

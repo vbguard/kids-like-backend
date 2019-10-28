@@ -64,10 +64,11 @@ app
 require('./config/passport');
 
 app.use(express.static(path.join(__dirname, 'static')));
-
-app.get('/', (req, res) => {
-	res.render('index', {name: 'John'});
-});
+app.get('/', express.static(path.join(__dirname, 'static')))
+app.get('/dashboard', express.static(path.join(__dirname, 'static')));
+app.get('/planning', express.static(path.join(__dirname, 'static')));
+app.get('/login', express.static(path.join(__dirname, 'static')));
+app.get('/register', express.static(path.join(__dirname, 'static')))
 app.use('/api/v1', router);
 app.use(
 	'/doc',
