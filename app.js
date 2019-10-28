@@ -64,18 +64,18 @@ app
 require('./config/passport');
 
 app.use(express.static(path.join(__dirname, 'static')));
-app.get('/', express.static(path.join(__dirname, 'static')));
-app.get('/login', express.static(path.join(__dirname, 'static')));
-app.get('/register', express.static(path.join(__dirname, 'static')));
-app.get('/planning', express.static(path.join(__dirname, 'static')));
-app.get('/dashboard/*', express.static(path.join(__dirname, 'static')));
+// app.get('/login', express.static(path.join(__dirname, 'static')));
+// app.get('/register', express.static(path.join(__dirname, 'static')));
+// app.get('/planning', express.static(path.join(__dirname, 'static')));
+// app.get('/dashboard/*', express.static(path.join(__dirname, 'static')));
 app.use('/api/v1', router);
 app.use(
-	'/doc',
+  '/doc',
 	swaggerUi.serve,
 	swaggerUi.setup(swaggerDocument, {customeSiteTitle: 'Kids-Like'})
-);
-
+  );
+  
+app.get('*', express.static(path.join(__dirname, 'static')));
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
 	next(createError(404));
