@@ -37,6 +37,17 @@ const getTasks = (req, res) => {
     .weekday(6)
     .toISOString();
 
+  // console.log('toDate', toDate);
+  // crutchDate is placed for tasks collection because tasks at the last day of the week are missed
+  const crutchDate = today
+    .set({
+      hour: 23,
+      minute: 59,
+      second: 59
+    })
+    .weekday(7)
+    .toISOString();
+
   Tasks.aggregate([{
         $match: {
           userId: ObjectId(userId)
@@ -46,8 +57,13 @@ const getTasks = (req, res) => {
         $match: {
           date: {
             $gte: new Date(fromDate),
-            $lte: new Date(toDate)
+            $lte: new Date(crutchDate)
           }
+        }
+      },
+      {
+        $sort: {
+          date: 1
         }
       },
       {
@@ -59,7 +75,20 @@ const getTasks = (req, res) => {
         }
       },
       {
-        $unwind: '$task'
+        $sort: {
+          date: 1
+        }
+      },
+      {
+        $unwind: {
+          path: '$task',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $sort: {
+          date: 1
+        }
       },
       {
         $addFields: {
@@ -134,10 +163,16 @@ const getTasks = (req, res) => {
         }
       },
       {
-        $unwind: '$dayTasks'
+        $unwind: {
+          path: '$dayTasks',
+          preserveNullAndEmptyArrays: true
+        }
       },
       {
-        $unwind: '$dayTasks'
+        $unwind: {
+          path: '$dayTasks',
+          preserveNullAndEmptyArrays: true
+        }
       },
       {
         $group: {
@@ -190,7 +225,6 @@ const getTasks = (req, res) => {
     ])
     .then(result => {
       console.log('result :', result);
-
       if (result.length === 0) {
         res.json({
           today: today,
@@ -224,9 +258,11 @@ const getTask = (req, res) => {
   const taskId = req.params.taskId;
 
   Tasks.findById(taskId)
-    .then(result => res.json({
-      result
-    }))
+    .then(result =>
+      res.json({
+        result
+      })
+    )
     .catch(err => {
       throw new Error(err);
     });
@@ -288,9 +324,11 @@ const createTask = (req, res) => {
 
   newTask
     .save()
-    .then(result => res.json({
-      result
-    }))
+    .then(result =>
+      res.json({
+        result
+      })
+    )
     .catch(err => {
       throw new Error(err);
     });
@@ -300,7 +338,7 @@ const updateTask = (req, res) => {
   const userId = req.user.id;
   const taskId = req.params.taskId;
   const taskForUpdate = req.body;
-
+  console.log('taskForUpdate', taskForUpdate)
   const schema = Joi.object({
     cardId: Joi.string(),
     isDone: Joi.boolean(),
@@ -359,6 +397,16 @@ const updateTask = (req, res) => {
         .weekday(6)
         .toISOString();
 
+      // crutchDate is placed because tasks at the last day of the week are missed
+      const crutchDate = today
+        .set({
+          hour: 23,
+          minute: 59,
+          second: 59
+        })
+        .weekday(7)
+        .toISOString();
+
       Tasks.aggregate([{
             $match: {
               userId: ObjectId(userId)
@@ -368,7 +416,7 @@ const updateTask = (req, res) => {
             $match: {
               date: {
                 $gte: new Date(fromDate),
-                $lte: new Date(toDate)
+                $lte: new Date(crutchDate)
               }
             }
           },
@@ -391,6 +439,8 @@ const updateTask = (req, res) => {
           }
         ])
         .then(aggregate => {
+          console.log('aggregate', aggregate)
+          console.log('result', result)
           res.json({
             status: 'OK',
             totalAmount: aggregate[0].totalAmount,
@@ -417,9 +467,11 @@ const deleteTask = (req, res) => {
   const taskId = req.params.taskId;
 
   Tasks.findByIdAndDelete(taskId)
-    .then(result => res.json({
-      result
-    }))
+    .then(result =>
+      res.json({
+        result
+      })
+    )
     .catch(err => {
       throw new Error(err);
     });
