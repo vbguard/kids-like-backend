@@ -2,18 +2,26 @@ const PlanningTasks = require('../models/planningTasks.model');
 const Joi = require('@hapi/joi');
 
 const getTasks = (req, res) => {
-	const userId = req.user.id;
-	PlanningTasks.find({userId})
-		.select({__v: 0, userId: 0})
-		.then(result => {
-			res.json({status: 'OK', planningTasks: result});
-		})
-		.catch(err => {
-			throw new Error(err);
-		});
+  const userId = req.user.id;
+  PlanningTasks.find({
+      userId
+    })
+    .select({
+      __v: 0,
+      userId: 0
+    })
+    .then(result => {
+      res.json({
+        status: 'OK',
+        planningTasks: result
+      });
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
 };
 
-const createPlanningTask = (req, res) => {
+const createPlanningTask = (req, res, next) => {
   const userId = req.user.id;
   const taskData = req.body;
 
@@ -35,16 +43,23 @@ const createPlanningTask = (req, res) => {
     return next(error);
   }
 
-  PlanningTasks.create({userId, cardTitle: value.cardTitle, imageUrl: value.imageUrl})
-  .then(result => {
-    res.json({status: 'OK', planningTask: result});
-  })
-  .catch(err => {
-    throw new Error(err);
-  });
+  PlanningTasks.create({
+      userId,
+      cardTitle: value.cardTitle,
+      imageUrl: value.imageUrl
+    })
+    .then(result => {
+      res.json({
+        status: 'OK',
+        planningTask: result
+      });
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
 };
 
 module.exports = {
-	createPlanningTask,
-	getTasks
+  createPlanningTask,
+  getTasks
 };
