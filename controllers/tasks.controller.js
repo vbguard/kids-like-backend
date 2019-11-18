@@ -8,7 +8,8 @@ const moment = require('moment');
 const Joi = require('joi');
 
 const getTasks = (req, res) => {
-  // console.log('inside getTasks');
+  console.log('inside getTasks');
+  debugger
   const userId = req.user.id;
 
   // const firstDay = moment().get;
@@ -18,7 +19,7 @@ const getTasks = (req, res) => {
       dow: 1 // Monday is the first day of the week
     }
   });
-
+console.log('today', today)
   const fromDate = today
     .set({
       hour: 3,
@@ -225,6 +226,7 @@ const getTasks = (req, res) => {
     ])
     .then(result => {
       console.log('result :', result);
+      console.log('result[0].tasks :', result[0].tasks);
       if (result.length === 0) {
         res.json({
           today: today,
@@ -478,7 +480,7 @@ const deleteTask = (req, res) => {
 };
 
 const createTasks = (req, res) => {
-  // console.log('req.body.tasks', req.body.tasks)
+  console.log('req.body.tasks', req.body.tasks)
   const tasksFromReq = req.body.tasks;
   const userId = req.user.id;
   const taskDaysArr = [];

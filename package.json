@@ -10,7 +10,8 @@
 		"node": ">=10.10.0"
 	},
 	"scripts": {
-		"dev": "nodemon --inspect ./bin/www",
+		"dev": "nodemon ./bin/www",
+		"debug": "nodemon --inspect ./bin/www",
 		"format": "prettier --write --single-quote --no-semi --print-width=120 --tab-width=2 \"src/**/*.{js,jsx} \"",
 		"lint": "eslint '**/*.{js,jsx}' --quiet",
 		"lint:fix": "eslint '**/*.{js,jsx}' --fix"
@@ -25,7 +26,7 @@
 		"@babel/preset-env": "7.5.5",
 		"@babel/preset-react": "7.0.0",
 		"@hapi/joi": "^16.1.7",
-		"bcrypt": "3.0.6",
+		"bcrypt": "^3.0.6",
 		"config": "3.2.2",
 		"cookie-parser": "1.4.4",
 		"cors": "2.8.5",
@@ -33,7 +34,7 @@
 		"express": "4.17.1",
 		"express-react-views": "0.11.0",
 		"express-session": "^1.17.0",
-		"helmet": "3.19.0",
+		"helmet": "^3.21.2",
 		"http-errors": "1.7.3",
 		"joi": "^14.3.1",
 		"moment": "^2.24.0",
