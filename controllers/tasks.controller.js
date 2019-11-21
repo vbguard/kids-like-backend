@@ -8,18 +8,13 @@ const moment = require('moment');
 const Joi = require('joi');
 
 const getTasks = (req, res) => {
-  console.log('inside getTasks');
-  debugger
   const userId = req.user.id;
-
-  // const firstDay = moment().get;
-  // console.log('firstDay :', firstDay);
   const today = moment().locale('uk', {
     week: {
       dow: 1 // Monday is the first day of the week
     }
   });
-console.log('today', today)
+
   const fromDate = today
     .set({
       hour: 3,
@@ -38,7 +33,6 @@ console.log('today', today)
     .weekday(6)
     .toISOString();
 
-  // console.log('toDate', toDate);
   // crutchDate is placed for tasks collection because tasks at the last day of the week are missed
   const crutchDate = today
     .set({
@@ -225,8 +219,6 @@ console.log('today', today)
       }
     ])
     .then(result => {
-      console.log('result :', result);
-      console.log('result[0].tasks :', result[0].tasks);
       if (result.length === 0) {
         res.json({
           today: today,
@@ -274,7 +266,6 @@ const postTasks = async (req, res) => {
   const tasksFromReq = req.body.tasks;
   const userId = req.user._id;
   const taskDaysArr = [];
-  console.log('tasksFromReq :', tasksFromReq);
   await tasksFromReq.forEach(({
     taskId,
     selectedDays
@@ -340,7 +331,6 @@ const updateTask = (req, res) => {
   const userId = req.user.id;
   const taskId = req.params.taskId;
   const taskForUpdate = req.body;
-  console.log('taskForUpdate', taskForUpdate)
   const schema = Joi.object({
     cardId: Joi.string(),
     isDone: Joi.boolean(),
@@ -441,8 +431,6 @@ const updateTask = (req, res) => {
           }
         ])
         .then(aggregate => {
-          console.log('aggregate', aggregate)
-          console.log('result', result)
           res.json({
             status: 'OK',
             totalAmount: aggregate[0].totalAmount,
@@ -480,7 +468,6 @@ const deleteTask = (req, res) => {
 };
 
 const createTasks = (req, res) => {
-  console.log('req.body.tasks', req.body.tasks)
   const tasksFromReq = req.body.tasks;
   const userId = req.user.id;
   const taskDaysArr = [];
@@ -489,14 +476,16 @@ const createTasks = (req, res) => {
     selectedDays
   }) => {
     selectedDays.map(day => {
+      const fromIncomingDateToString = moment(day, 'DD-MM-YYYY').format('YYYY-MM-DD-HH-mm-ss');
+      const dateToUTC=fromIncomingDateToString.split('-');
+      const fromDateStringToUTCDate= new Date(Date.UTC(+dateToUTC[0],+dateToUTC[1]-1,+dateToUTC[2], 0, 0, 0));
       return taskDaysArr.push({
         userId,
         task: taskId,
-        date: new Date(moment(day, ['DD-MM-YYYY']))
+        date: fromDateStringToUTCDate
       });
     });
   });
-  // console.log('taskDaysArr', taskDaysArr)
   Tasks.insertMany(taskDaysArr)
     .then(result => {
       res.json({
@@ -511,7 +500,6 @@ const createTasks = (req, res) => {
         message: err.message
       });
     });
-  // console.log('taskDaysArr', taskDaysArr)
 };
 
 module.exports = {
