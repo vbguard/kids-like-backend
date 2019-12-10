@@ -1,16 +1,7 @@
-// const Tasks = require('../models/tasks.model');
 const Tasks = require('../../models/tasks.model');
 const ObjectId = require('mongoose').Types.ObjectId;
-const moment = require('moment');
 
 const aggregateTasks = (day, userId) => {
-	// console.log('inside aggregationTasks');
-	// console.log('day', day);
-	// console.log('typeof day', typeof day);
-	// let bufferStartDate = {...day};
-	// console.log('fromDate', fromDate);
-	// console.log('moment', moment);
-	// console.log('day instanceof moment', day instanceof moment);
 	const fromDate = day
 		.set({
 			hour: 0,
@@ -20,28 +11,14 @@ const aggregateTasks = (day, userId) => {
 		})
 		.weekday(0)
 		.toISOString();
-	// const toDate = today
-	//     .set({
-	//         hour: 23,
-	//         minute: 59,
-	//         second: 59
-	//     })
-	//     .weekday(6)
-	//     .toISOString();
-	// let bufferCrutchDate = {...day};
-	// crutchDate is placed for tasks collection because tasks at the last day of the week are missed
-	const crutchDate= day
-		.set({
-			hour: 23,
-			minute: 59,
-			second: 59
-		})
-		.weekday(6)
-		.toISOString();
-	// console.log('fromDate', fromDate);
-	// console.log('typeof fromDate', typeof fromDate);
-	// console.log('crutchDate', crutchDate);
-	// console.log('typeof crutchDate', typeof crutchDate);
+	const toDate = day
+	    .set({
+	        hour: 23,
+	        minute: 59,
+	        second: 59
+	    })
+	    .weekday(6)
+	    .toISOString();
 	return Tasks.aggregate([
 		{
 			$match: {
@@ -52,7 +29,7 @@ const aggregateTasks = (day, userId) => {
 			$match: {
 				date: {
 					$gte: new Date(fromDate),
-					$lte: new Date(crutchDate)
+					$lte: new Date(toDate)
 				}
 			}
 		},

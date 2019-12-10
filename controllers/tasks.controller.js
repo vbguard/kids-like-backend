@@ -13,37 +13,22 @@ const aggregateTasks = require('./helpers/aggregateTasks.js');
 const getTasks = (req, res) => {
 	const userId = req.user.id;
 	const todayDate = new Date();
-	// console.log('todayDate', todayDate);
-	// console.log('typeof todayDate', typeof todayDate);
 	const nextWeekDay = getNextWeekDay(todayDate);
-	// console.log('nextWeekDay', nextWeekDay);
-	// console.log('typeof nextWeekDay', typeof nextWeekDay);
 	const today = moment().locale('uk', {
 		week: {
 			dow: 1 // Monday is the first day of the week
 		}
 	});
-	// console.log('today 26', today);
-	// console.log('typeof today', typeof today);
 
 	const momentNextWeekDay = moment(nextWeekDay).locale('uk', {
 		week: {
 			dow: 1 // Monday is the first day of the week
 		}
 	});
-	// console.log('momentNextWeekDay 62', momentNextWeekDay);
-	// console.log('typeof momentNextWeekDay', typeof momentNextWeekDay);
 
-	// console.log('momentNextWeekDay', momentNextWeekDay);
-	// console.log('today 80', today);
-	// console.log('typeof today', typeof today);
 	aggregateTasks(today, userId)
 		.then(result => {
-			// console.log('result', result);
 			aggregateTasks(momentNextWeekDay, userId).then(nextWeekResult => {
-				// console.log('result', result);
-				// console.log('today 87', today);
-				// console.log('typeof today', typeof today);
 				const fromDate = today
 					.set({
 						hour: 3,
@@ -53,8 +38,6 @@ const getTasks = (req, res) => {
 					})
 					.weekday(0)
 					.toISOString();
-				// console.log('today 37', today);
-				// console.log('typeof today', typeof today);
 				const toDate = today
 					.set({
 						hour: 23,
@@ -217,8 +200,6 @@ const updateTask = (req, res) => {
 			dow: 1 // Monday is the first day of the week
 		}
 	});
-	// const todayDate = new Date(today);
-	// getNextWeekDay(todayDate);
 
 	Tasks.findByIdAndUpdate(
 		{
@@ -259,16 +240,6 @@ const updateTask = (req, res) => {
 				})
 				.weekday(6)
 				.toISOString();
-
-			// crutchDate is placed because tasks at the last day of the week are missed
-			// const crutchDate = today
-			// 	.set({
-			// 		hour: 23,
-			// 		minute: 59,
-			// 		second: 59
-			// 	})
-			// 	.weekday(7)
-			// 	.toISOString();
 
 			Tasks.aggregate([
 				{

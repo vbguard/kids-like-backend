@@ -1,8 +1,10 @@
 const DefaultTasks = require('../models/defaultTasks.model');
 const Joi = require('@hapi/joi');
 
+console.log('defaultTasksController')
+
 const getDefaultTasks = (req, res) => {
-  const userId = req.user.id;
+
   DefaultTasks.find()
     .then(result => res.json({
       result
