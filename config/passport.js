@@ -4,7 +4,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const Users = require('../models/user.model');
-const { jwtSecretKey } = require('./config');
+const { jwtSecretKey, googleClientId, googleClientKey } = require('./config');
 
 
 module.exports = function(passport) {
