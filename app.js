@@ -61,7 +61,7 @@ app
 	.use(passport.initialize())
 	.use(passport.session());
 
-require('./config/passport');
+require('./config/passport')(passport);
 
 app.use(express.static(path.join(__dirname, 'static')));
 // app.get('/login', express.static(path.join(__dirname, 'static')));
