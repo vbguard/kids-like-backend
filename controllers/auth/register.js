@@ -44,11 +44,12 @@ const userSignup = (req, res, next) => {
       error: errMessage
     });
   };
-
+  console.log('result.value :', result.value);
   const newUser = new User(result.value);
   newUser
     .save()
-    .then(() => {
+    .then(savedUser => {
+      console.log('savedUser :', savedUser);
       DefaultTasks.find({})
         .then(defaultTasks => {
           // console.log('defaultTasks :', defaultTasks);
@@ -60,7 +61,9 @@ const userSignup = (req, res, next) => {
 
           PlanningTasks.insertMany(defaultTasksWithUserId)
             .then(savingPlanTasks => {
+              console.log(`create user planning tasks`);
               if (savingPlanTasks) {
+                console.log(`got to login`);
                 login(req, res);
               }
             })
