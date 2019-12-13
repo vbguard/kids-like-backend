@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const PlanningTasksSchema = new Schema({
 	cardTitle: {
     type: String,
-    unique: true,
     index: true
   },
 	imageUrl: String,
