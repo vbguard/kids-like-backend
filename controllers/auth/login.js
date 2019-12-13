@@ -42,6 +42,7 @@ const userLogin = (req, res, next) => {
       error: errMessage
     });
   };
+  
   console.log(`passport to login`);
   passport.authenticate(
     'local', {
@@ -55,7 +56,7 @@ const userLogin = (req, res, next) => {
         sendError(infoMessage);
         return;
       }
-      
+
       req.login(
         user, {
           session: false

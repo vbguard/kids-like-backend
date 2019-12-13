@@ -17,7 +17,7 @@ module.exports = function(passport) {
       },
       (email, password, done) => {
         console.log('login :', email, ' ', password);
-        Users.findOne({email})
+        Users.findOne({ email })
           .then(user => {
             if (!user) {
               return done(null, false, {
@@ -41,7 +41,7 @@ module.exports = function(passport) {
               }
             });
           })
-          .catch(done(null, false, {message: 'some error'}));
+          .catch(done(null));
       }
     )
   );
