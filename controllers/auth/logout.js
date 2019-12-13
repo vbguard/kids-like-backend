@@ -1,7 +1,7 @@
 const User = require('../../models/user.model');
 
 const logOut = (req, res) => {
-	const {_id: id} = req.user;
+	const userId = req.user.id;
 
 	const sendResponse = () => {
 		res.json({
@@ -17,7 +17,7 @@ const logOut = (req, res) => {
 		});
 	};
 
-	User.findByIdAndUpdate(id, {$unset: {token: ''}})
+	User.findByIdAndUpdate(userId, {$unset: {token: ''}})
 		.then(sendResponse)
 		.catch(sendError);
 };

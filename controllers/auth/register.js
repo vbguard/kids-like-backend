@@ -15,7 +15,7 @@ const userSignup = (req, res, next) => {
         )
         .required(),
       password: Joi.string()
-        .min(5)
+        .min(6)
         .max(12)
         .required(),
       nickname: Joi.string()

@@ -276,8 +276,8 @@ const updateTask = (req, res) => {
 				.then(aggregate => {
 					res.json({
 						status: 'OK',
-						totalAmount: aggregate[0].totalAmount,
-						totalDone: aggregate[0].totalDone,
+						totalAmount: aggregate[0].totalAmount || 0,
+						totalDone: aggregate[0].totalDone || 0,
 						updatedTasks: {
 							_id: result._id,
 							isDone: result.isDone,
