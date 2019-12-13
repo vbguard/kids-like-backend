@@ -19,6 +19,7 @@ module.exports = function(passport) {
         console.log('login :', email, ' ', password);
         Users.findOne({ email })
           .then(user => {
+            console.log('user find in login pass :', user);
             if (!user) {
               return done(null, false, {
                 errors: {message: 'Incorrect email or password'}
