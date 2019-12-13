@@ -16,6 +16,7 @@ module.exports = function(passport) {
         session: false
       },
       (email, password, done) => {
+        console.log('login :', email, ' ', password);
         Users.findOne({email})
           .then(user => {
             if (!user) {
@@ -33,13 +34,14 @@ module.exports = function(passport) {
               if (isMatch && !err) {
                 user.getJWT();
                 const userData = user.getPublicFields();
+                console.log(userData);
                 return done(null, userData, {
                   message: 'Logged In Successfully'
                 });
               }
             });
           })
-          .catch(done);
+          .catch(done(null, false, {message: 'some error'}));
       }
     )
   );
