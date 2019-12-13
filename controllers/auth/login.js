@@ -29,6 +29,7 @@ const userLogin = (req, res, next) => {
   }
 
   const sendResponse = user => {
+    console.log(`suc login send`);
     res.json({
       status: 'success',
       ...user
@@ -36,6 +37,7 @@ const userLogin = (req, res, next) => {
   };
 
   const sendError = error => {
+    console.log('error :', error);
     const errMessage = error.message || 'must handle this error on login';
     res.status(400).json({
       status: 'error',
