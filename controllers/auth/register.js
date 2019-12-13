@@ -40,22 +40,20 @@ const userSignup = (req, res, next) => {
     console.log('register error :', error);
     const errMessage =
       error.message || 'must handle this error on registration';
-    res.json({
+    res.status(400).json({
       status: 'error',
       error: errMessage
     });
   };
 
-  console.log('result.value :', result.value);
   const newUser = new User(result.value);
   
   newUser
     .save()
     .then(savedUser => {
-      console.log('savedUser :', savedUser);
+      if (savedUser) {
       DefaultTasks.find({})
         .then(defaultTasks => {
-          // console.log('defaultTasks :', defaultTasks);
           const defaultTasksWithUserId = defaultTasks.map(task => ({
             userId: newUser._id,
             cardTitle: task.cardTitle,
@@ -64,15 +62,14 @@ const userSignup = (req, res, next) => {
 
           PlanningTasks.insertMany(defaultTasksWithUserId)
             .then(savingPlanTasks => {
-              console.log(`create user planning tasks`);
               if (savingPlanTasks) {
-                console.log(`got to login`);
                 login(req, res);
               }
             })
             .catch(sendError);
         })
         .catch(sendError);
+      }
     })
     .catch(sendError);
 };

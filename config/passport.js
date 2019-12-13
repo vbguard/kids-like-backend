@@ -16,10 +16,8 @@ module.exports = function(passport) {
         session: false
       },
       (email, password, done) => {
-        console.log('login :', email, ' ', password);
         Users.findOne({ email })
           .then(user => {
-            console.log('user find in login pass :', user);
             if (!user) {
               return done(null, false, {
                 errors: {message: 'Incorrect email or password'}
@@ -35,7 +33,6 @@ module.exports = function(passport) {
               if (isMatch && !err) {
                 user.getJWT();
                 const userData = user.getPublicFields();
-                console.log(userData);
                 return done(null, userData, {
                   message: 'Logged In Successfully'
                 });
@@ -43,8 +40,7 @@ module.exports = function(passport) {
             });
           })
           .catch(err => {
-            console.log('err :', err);
-            done(null)
+            done(null, false, err)
           });
       }
     )
