@@ -10,7 +10,7 @@
 		"node": ">=10.10.0"
 	},
 	"scripts": {
-		"dev": "nodemon ./bin/www",
+		"dev": "nodemon --inspect ./bin/www",
 		"format": "prettier --write --single-quote --no-semi --print-width=120 --tab-width=2 \"src/**/*.{js,jsx} \"",
 		"lint": "eslint '**/*.{js,jsx}' --quiet",
 		"lint:fix": "eslint '**/*.{js,jsx}' --fix"
