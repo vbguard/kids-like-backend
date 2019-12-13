@@ -37,6 +37,7 @@ const userSignup = (req, res, next) => {
   }
 
   const sendError = error => {
+    console.log('register error :', error);
     const errMessage =
       error.message || 'must handle this error on registration';
     res.json({
