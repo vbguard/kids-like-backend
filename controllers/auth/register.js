@@ -45,8 +45,10 @@ const userSignup = (req, res, next) => {
       error: errMessage
     });
   };
+
   console.log('result.value :', result.value);
   const newUser = new User(result.value);
+  
   newUser
     .save()
     .then(savedUser => {
