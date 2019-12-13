@@ -78,9 +78,7 @@ UserSchema.methods.getJWT = function() {
     config.jwtSecretKey
   );
 
-  const token = `Bearer ${preToken}`;
-
-  this.token = token;
+  this.token = preToken;
   this.save();
   return token;
 };
