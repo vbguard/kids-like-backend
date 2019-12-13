@@ -1,0 +1,6 @@
+{"_id":{"$oid":"5da7355b369e7f180c1d6ec5"},"cardTitle":"полити квіти","imageUrl":"https://kids-like.goit.co.ua/images/pour.png"}
+{"_id":{"$oid":"5da73754369e7f180c1d6ec7"},"cardTitle":"пропилососити","imageUrl":"https://kids-like.goit.co.ua/images/vacuuming.png","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5da8a098c5c8e737b8dd2b27"},"cardTitle":"викинути сміття","imageUrl":"https://kids-like.goit.co.ua/images/recycle.png","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5da8a0adc5c8e737b8dd2b28"},"cardTitle":"помити підлогу","imageUrl":"https://kids-like.goit.co.ua/images/washFloor.png","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5da8a21cc5c8e737b8dd2b2a"},"cardTitle":"підмести","imageUrl":"https://kids-like.goit.co.ua/images/cleaning.png","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5da8a257c5c8e737b8dd2b2b"},"cardTitle":"прибрати у шафі","imageUrl":"https://kids-like.goit.co.ua/images/washGlass.png","__v":{"$numberInt":"0"}}
