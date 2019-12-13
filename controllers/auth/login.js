@@ -49,6 +49,9 @@ const userLogin = (req, res, next) => {
       session: false
     },
     (err, user, info) => {
+      console.log('err :', err);
+      console.log('user :', user);
+      console.log('info :', info);
       if (err || !user) {
         const infoMessage = info ? info : {
           message: 'Login failed'
