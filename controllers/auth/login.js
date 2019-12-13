@@ -11,14 +11,10 @@ const userLogin = (req, res, next) => {
           /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
         )
         .required(),
-      // nickname: Joi.string()
-      // 	.required()
-      // 	.min(5)
-      // 	.max(15),
       password: Joi.string()
-        .required()
-        .min(6)
-        .max(16)
+      .min(6)
+      .max(16)
+      .required()
     })
     .options({
       presence: 'required',
@@ -35,7 +31,7 @@ const userLogin = (req, res, next) => {
   const sendResponse = user => {
     res.json({
       status: 'success',
-      user
+      ...user
     });
   };
 
@@ -65,7 +61,7 @@ const userLogin = (req, res, next) => {
         },
         err => {
           if (err) {
-            res.send(err);
+            res.status(400).json(err);
           }
           sendResponse(user);
         }
