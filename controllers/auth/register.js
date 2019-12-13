@@ -31,7 +31,9 @@ const userSignup = (req, res, next) => {
   const result = schema.validate(req.body);
 
   if (result.error) {
-    return next(result.error);
+    return res.status(422).json({
+      message: result.error.message
+    });
   }
 
   const sendError = error => {
@@ -55,6 +57,7 @@ const userSignup = (req, res, next) => {
             cardTitle: task.cardTitle,
             imageUrl: task.imageUrl
           }));
+
           PlanningTasks.insertMany(defaultTasksWithUserId)
             .then(savingPlanTasks => {
               if (savingPlanTasks) {
