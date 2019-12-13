@@ -41,7 +41,10 @@ module.exports = function(passport) {
               }
             });
           })
-          .catch(done(null));
+          .catch(err => {
+            console.log('err :', err);
+            done(null)
+          });
       }
     )
   );
@@ -80,7 +83,7 @@ module.exports = function(passport) {
       {
         clientID: googleClientId,
         clientSecret: googleClientKey,
-        callbackURL: `http://localhost:5000/api/v1/auth/google/callback`
+        callbackURL: `https://kidslike.goit.co.ua/api/v1/auth/google/callback`
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
