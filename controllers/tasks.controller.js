@@ -31,7 +31,7 @@ const getTasks = (req, res) => {
 			aggregateTasks(momentNextWeekDay, userId).then(nextWeekResult => {
 				const fromDate = today
 					.set({
-						hour: 3,
+						hour: 0,
 						minute: 0,
 						second: 0,
 						millisecond: 0
@@ -46,37 +46,11 @@ const getTasks = (req, res) => {
 					})
 					.weekday(6)
 					.toISOString();
-				// crutchDate is placed for tasks collection because tasks at the last day of the week is missed
-				const crutchDate = today
-					.set({
-						hour: 23,
-						minute: 59,
-						second: 59
-					})
-					.weekday(7)
-					.toISOString();
 				const momentNextWeekDay = moment(nextWeekDay).locale('uk', {
 					week: {
 						dow: 1 // Monday is the first day of the week
 					}
 				});
-				const nextWeekFromDate = momentNextWeekDay
-					.set({
-						hour: 3,
-						minute: 0,
-						second: 0,
-						millisecond: 0
-					})
-					.weekday(0)
-					.toISOString();
-				const nextWeekToDate = momentNextWeekDay
-					.set({
-						hour: 23,
-						minute: 59,
-						second: 59
-					})
-					.weekday(6)
-					.toISOString();
 				res.json({
 					today: todayDate,
 					weekRange: {
@@ -86,17 +60,6 @@ const getTasks = (req, res) => {
 					tasks: result.length === 0 ? [] : result[0].tasks,
 					totalAmount: result.length === 0 ? 0 : result[0].totalAmount,
 					totalDone: result.length === 0 ? 0 : result[0].totalDone,
-					nextWeekRange: {
-						fromDate: nextWeekFromDate,
-						toDate: nextWeekToDate
-					},
-					nextWeekDay: nextWeekDay,
-					nextWeekTasks:
-						nextWeekResult.length === 0 ? [] : nextWeekResult[0].tasks,
-					nextWeekTotalAmount:
-						nextWeekResult.length === 0 ? 0 : nextWeekResult[0].totalAmount,
-					nextWeekTotalDone:
-						nextWeekResult.length === 0 ? 0 : nextWeekResult[0].totalDone
 				});
 			});
 		})

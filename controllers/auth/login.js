@@ -29,7 +29,6 @@ const userLogin = (req, res, next) => {
   }
 
   const sendResponse = user => {
-    console.log(`suc login send`);
     res.json({
       status: 'success',
       ...user
@@ -37,7 +36,6 @@ const userLogin = (req, res, next) => {
   };
 
   const sendError = error => {
-    console.log('error :', error);
     const errMessage = error.message || 'must handle this error on login';
     res.status(400).json({
       status: 'error',
@@ -45,15 +43,11 @@ const userLogin = (req, res, next) => {
     });
   };
 
-  console.log(`passport to login`);
   passport.authenticate(
     'local', {
       session: false
     },
     (err, user, info) => {
-      console.log('err :', err);
-      console.log('user :', user);
-      console.log('info :', info);
       if (err || !user) {
         const infoMessage = info ? info : {
           message: 'Login failed'
@@ -69,9 +63,9 @@ const userLogin = (req, res, next) => {
         err => {
           if (err) {
             console.log('err :', err);
-            // res.status(400).json(err);
+            res.status(400).json(err);
           }
-          console.log(`login success: `, user);
+
           sendResponse(user);
         }
       );
