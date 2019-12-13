@@ -42,7 +42,7 @@ const userLogin = (req, res, next) => {
       error: errMessage
     });
   };
-  
+
   console.log(`passport to login`);
   passport.authenticate(
     'local', {
@@ -63,7 +63,8 @@ const userLogin = (req, res, next) => {
         },
         err => {
           if (err) {
-            res.status(400).json(err);
+            console.log('err :', err);
+            // res.status(400).json(err);
           }
           console.log(`login success: `, user);
           sendResponse(user);
