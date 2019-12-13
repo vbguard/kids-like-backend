@@ -77,9 +77,12 @@ UserSchema.methods.getJWT = function() {
     },
     config.jwtSecretKey
   );
-
-  this.token = preToken;
+  
+  const token = preToken
+  
+  this.token = token;
   this.save();
+  
   return token;
 };
 
