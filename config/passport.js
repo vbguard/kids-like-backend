@@ -92,7 +92,7 @@ module.exports = function(passport) {
             return done(null, { ...user, token });
           }
           if (!user) {
-            const newUser = await new User({
+            const newUser = await new Users({
               googleId: profile._json.sub,
               name: { fullName: profile._json.name },
               photo: profile._json.picture,
