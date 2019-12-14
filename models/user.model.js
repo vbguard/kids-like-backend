@@ -28,7 +28,12 @@ const UserSchema = new Schema({
     unique: true,
     index: true
   },
-  name: { fullName: String },
+  name: { 
+    fullName: String, 
+    firstName: String,
+    lastName: String  
+  },
+  locale: String,
   photo: String,
   token: String
 }, {
