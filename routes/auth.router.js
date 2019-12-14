@@ -29,7 +29,7 @@ router
     '/google',
     passport.authenticate('google', {
       session: false,
-      scope: ['scope']
+      scope: ['email', 'profile']
     })
   )
   .get(
