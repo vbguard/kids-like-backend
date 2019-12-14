@@ -102,7 +102,7 @@ module.exports = function(passport) {
             newUser.save((err, user) => {
               if (err) return done(err, {});
               const token = user.getJWT();
-              return done(null, { ...user, token });
+              return done(err, { ...user, token });
             });
           }
         } catch (error) {
