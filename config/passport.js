@@ -85,7 +85,7 @@ module.exports = function(passport) {
       async (accessToken, refreshToken, profile, done) => {
         try {
           console.log('profile :', profile);
-          const user = await User.findOne({ googleId: profile.id });
+          const user = await Users.findOne({ googleId: profile.id });
   
           if (user) {
             const token = user.getJWT();
