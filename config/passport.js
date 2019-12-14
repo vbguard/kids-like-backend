@@ -100,8 +100,9 @@ module.exports = function(passport) {
             });
   
             newUser.save((err, user) => {
+              if (err) return done(err, {});
               const token = user.getJWT();
-              return done(err, { ...user, token });
+              return done(null, { ...user, token });
             });
           }
         } catch (error) {
