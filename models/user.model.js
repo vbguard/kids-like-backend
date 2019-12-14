@@ -24,6 +24,13 @@ const UserSchema = new Schema({
     required: true,
     trim: true
   },
+  googleId: {
+    type: String,
+    unique: true,
+    index: true
+  },
+  name: { fullName: String },
+  photo: String,
   token: String
 }, {
   timestamps: true
