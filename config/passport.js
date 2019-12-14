@@ -85,7 +85,7 @@ module.exports = function(passport) {
       async (accessToken, refreshToken, profile, done) => {
         try {
           console.log('profile :', profile);
-          const user = await User.findOne({ googleId: profile.id });
+          const user = await Users.findOne({ googleId: profile.id });
   
           if (user) {
             const token = user.getJWT();
@@ -102,7 +102,7 @@ module.exports = function(passport) {
             newUser.save((err, user) => {
               if (err) return done(err, {});
               const token = user.getJWT();
-              return done(null, { ...user, token });
+              return done(err, { ...user, token });
             });
           }
         } catch (error) {
