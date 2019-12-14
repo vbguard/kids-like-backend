@@ -53,8 +53,9 @@ router
       // You could put your own behavior in here, fx: you could force auth again...
       // res.redirect('/auth/facebook/');
       if (err) {
+        console.log('err :', err);
         // res.status(400);
-        // res.render('error', { message: err.message });
+        res.render('error', { message: err.message });
       }
     }
   );
