@@ -5,8 +5,8 @@ const passportUserCheck = passport.authenticate('jwt', {
 });
 
 const taskController = require('../controllers/tasks.controller');
-	// for displaying tasks
+// for displaying tasks
 router
 	.get('/', passportUserCheck, taskController.getTasks)
-    .patch('/:taskId', passportUserCheck, taskController.updateTask);
+	.patch('/:taskId', passportUserCheck, taskController.updateTask);
 module.exports = router;

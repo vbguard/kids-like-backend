@@ -9,18 +9,10 @@ const customTaskController = require('../controllers/customTaskController');
 const taskController = require('../controllers/tasks.controller');
 // for planning
 router
-	.post(
-		'/custom',
-		passportUserCheck,
-		customTaskController.customTaskCreate
-	)
-	.post(
-		'/',
-		passportUserCheck,
-		taskPlanningController.createPlanningTask
-	)
+	.post('/custom', passportUserCheck, customTaskController.customTaskCreate)
+	.post('/', passportUserCheck, taskPlanningController.createPlanningTask)
 	.get('/', passportUserCheck, taskPlanningController.getTasks)
-	.patch('/:taskId', passportUserCheck, taskController.updateTask)
+	// .patch('/:taskId', passportUserCheck, taskController.updateTask)
 	.post('/week', passportUserCheck, taskController.createTasks);
 
 module.exports = router;

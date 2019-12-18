@@ -12,17 +12,9 @@ router
 		passportUserCheck,
 		defaultTasksController.getDefaultTask
 	)
-	.get(
-		'/',
-		passportUserCheck,
-		defaultTasksController.getDefaultTasks
-	)
-	.post(
-		'/',
-		passportUserCheck,
-		defaultTasksController.createDefaultTask
-	)
-	.put(
+	.get('/', passportUserCheck, defaultTasksController.getDefaultTasks)
+	.post('/', passportUserCheck, defaultTasksController.createDefaultTask)
+	.patch(
 		'/:defaultTaskId',
 		passportUserCheck,
 		defaultTasksController.updateDefaultTask

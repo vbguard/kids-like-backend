@@ -70,12 +70,12 @@ app.use(express.static(path.join(__dirname, 'static')));
 // app.get('/dashboard/*', express.static(path.join(__dirname, 'static')));
 app.use('/api/v1', router);
 app.use(
-  '/doc',
+	'/doc',
 	swaggerUi.serve,
 	swaggerUi.setup(swaggerDocument, {customeSiteTitle: 'Kids-Like'})
-  );
-  
-app.use('*', express.static(path.join(__dirname, 'static')));
+);
+
+// app.use('*', express.static(path.join(__dirname, 'static')));
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
 	next(createError(404));
