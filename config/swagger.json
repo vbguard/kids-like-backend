@@ -13,7 +13,7 @@
 	"schemes": ["https", "http"],
 	"servers": [
 		{
-			"url": "https://kids-like.goit.co.ua/api/v1",
+			"url": "https://kidslike.goit.co.ua/api/v1",
 			"description": "The production API server"
 		},
 		{
