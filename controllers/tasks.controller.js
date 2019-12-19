@@ -28,39 +28,35 @@ const getTasks = (req, res) => {
 
 	aggregateTasks(today, userId)
 		.then(result => {
-			aggregateTasks(momentNextWeekDay, userId).then(nextWeekResult => {
-				const fromDate = today
-					.set({
-						hour: 0,
-						minute: 0,
-						second: 0,
-						millisecond: 0
-					})
-					.weekday(0)
-					.toISOString();
-				const toDate = today
-					.set({
-						hour: 23,
-						minute: 59,
-						second: 59
-					})
-					.weekday(6)
-					.toISOString();
-				const momentNextWeekDay = moment(nextWeekDay).locale('uk', {
-					week: {
-						dow: 1 // Monday is the first day of the week
-					}
-				});
-				res.json({
-					today: todayDate,
-					weekRange: {
-						fromDate: fromDate,
-						toDate: toDate
-					},
-					tasks: result.length === 0 ? [] : result[0].tasks,
-					totalAmount: result.length === 0 ? 0 : result[0].totalAmount,
-					totalDone: result.length === 0 ? 0 : result[0].totalDone,
-				});
+			const fromDate = today
+				.set({
+					hour: 0,
+					minute: 0,
+					second: 0,
+					millisecond: 0
+				})
+				.weekday(0)
+				.toISOString();
+
+			console.log('fromDate :', fromDate);
+			const toDate = today
+				.set({
+					hour: 23,
+					minute: 59,
+					second: 59
+				})
+				.weekday(6)
+				.toISOString();
+			res.json({
+				today: todayDate,
+				weekRange: {
+					fromDate: fromDate,
+					toDate: toDate
+				},
+				tasks: result.length === 0 ? [] : result[0].tasks,
+				totalAmount: result.length === 0 ? 0 : result[0].totalAmount,
+				totalDone: result.length === 0 ? 0 : result[0].totalDone,
+				// tasks: result
 			});
 		})
 		.catch(err => {
@@ -88,10 +84,11 @@ const postTasks = async (req, res) => {
 	const taskDaysArr = [];
 	await tasksFromReq.forEach(({taskId, selectedDays}) => {
 		selectedDays.forEach(day => {
+			console.log('day :', day);
 			return taskDaysArr.push({
 				userId,
 				task: taskId,
-				date: moment(day, ['DD-MM-YYYY'])
+				date: new Date(day)
 			});
 		});
 	});

@@ -11,31 +11,29 @@ const aggregateTasks = (day, userId) => {
 		})
 		.weekday(0)
 		.toISOString();
+
+	console.log('fromDate :', fromDate);
 	const toDate = day
-	    .set({
-	        hour: 23,
-	        minute: 59,
-	        second: 59
-	    })
-	    .weekday(6)
-	    .toISOString();
+		.set({
+			hour: 23,
+			minute: 59,
+			second: 59
+		})
+		.weekday(6)
+		.toISOString();
+
+	console.log('toDate :', toDate);
 	return Tasks.aggregate([
+		// {
+		// 	$match: {}
+		// }
 		{
 			$match: {
-				userId: ObjectId(userId)
-			}
-		},
-		{
-			$match: {
+				userId: ObjectId(userId),
 				date: {
 					$gte: new Date(fromDate),
 					$lte: new Date(toDate)
 				}
-			}
-		},
-		{
-			$sort: {
-				date: 1
 			}
 		},
 		{
@@ -47,19 +45,9 @@ const aggregateTasks = (day, userId) => {
 			}
 		},
 		{
-			$sort: {
-				date: 1
-			}
-		},
-		{
 			$unwind: {
 				path: '$task',
 				preserveNullAndEmptyArrays: true
-			}
-		},
-		{
-			$sort: {
-				date: 1
 			}
 		},
 		{
@@ -75,7 +63,7 @@ const aggregateTasks = (day, userId) => {
 				cardTitle: true,
 				imageUrl: true,
 				isDone: true,
-				point: true
+				points: true
 			}
 		},
 		{
@@ -106,12 +94,7 @@ const aggregateTasks = (day, userId) => {
 				'dayTasks.cardTitle': true,
 				'dayTasks.imageUrl': true,
 				'dayTasks.isDone': true,
-				'dayTasks.point': true
-			}
-		},
-		{
-			$sort: {
-				day: 1
+				'dayTasks.points': true
 			}
 		},
 		{
@@ -120,11 +103,6 @@ const aggregateTasks = (day, userId) => {
 				dayTasks: {
 					$addToSet: '$dayTasks'
 				}
-			}
-		},
-		{
-			$sort: {
-				_id: 1
 			}
 		},
 		{
@@ -153,7 +131,7 @@ const aggregateTasks = (day, userId) => {
 					$push: '$dayTasks'
 				},
 				totalAmount: {
-					$sum: '$dayTasks.point'
+					$sum: '$dayTasks.points'
 				},
 				totalDone: {
 					$sum: {
@@ -176,11 +154,6 @@ const aggregateTasks = (day, userId) => {
 			}
 		},
 		{
-			$sort: {
-				day: 1
-			}
-		},
-		{
 			$group: {
 				_id: false,
 				tasks: {
@@ -192,6 +165,16 @@ const aggregateTasks = (day, userId) => {
 				totalDone: {
 					$sum: '$totalDone'
 				}
+			}
+		},
+		{
+			$project: {
+				_id: true,
+				tasks: true,
+				totalAmount: true,
+				totalDone: true,
+				'weekRange.fromDate': fromDate,
+				'weekRange.toDate': toDate
 			}
 		}
 	]);

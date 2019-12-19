@@ -13,6 +13,6 @@ router
 	.post('/', passportUserCheck, taskPlanningController.createPlanningTask)
 	.get('/', passportUserCheck, taskPlanningController.getTasks)
 	// .patch('/:taskId', passportUserCheck, taskController.updateTask)
-	.post('/week', passportUserCheck, taskController.createTasks);
+	.post('/week', passportUserCheck, taskController.postTasks);
 
 module.exports = router;

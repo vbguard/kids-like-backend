@@ -3,22 +3,25 @@ const Schema = mongoose.Schema;
 
 const PlanningTasksSchema = new Schema({
 	cardTitle: {
-    type: String,
-    index: true
-  },
+		type: String,
+		index: true
+	},
 	imageUrl: String,
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "Users"
-  }
+	points: Number,
+	userId: {
+		type: Schema.Types.ObjectId,
+		ref: 'Users'
+	}
 });
 
 PlanningTasksSchema.methods.getPublicFields = function() {
-  const returnObject = {
-    cardTitle: this.cardTitle,
-    imageUrl: this.imageUrl
-  };
-  return returnObject;
+	const returnObject = {
+		cardTitle: this.cardTitle,
+		imageUrl: this.imageUrl,
+		points: this.points,
+		_id: this._id
+	};
+	return returnObject;
 };
 
 PlanningTasksSchema.pre('findOneAndUpdate', function() {

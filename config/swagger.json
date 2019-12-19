@@ -131,6 +131,26 @@
 							}
 						}
 					},
+					"404": {
+						"description": "BAD",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": false
+										},
+										"error": {
+											"type": "string",
+											"example": "User not found"
+										}
+									}
+								}
+							}
+						}
+					},
 					"422": {
 						"description": "BAD",
 						"content": {
@@ -185,7 +205,12 @@
 							"example": {
 								"email": "testovoy@gmail.com",
 								"password": "password",
-								"nickname": "Testovoy"
+								"nickname": "Testovoy",
+								"name": {
+									"fullName": "Jorik McFlayer",
+									"fisrtName": "Jorik",
+									"lastName": "McFlayer"
+								}
 							}
 						}
 					}
@@ -209,12 +234,12 @@
 									"type": "object",
 									"properties": {
 										"success": {
-											"type": "boolean",
-											"example": false
-										},
-										"message": {
 											"type": "string",
-											"example": "Invalid Password"
+											"example": "error"
+										},
+										"error": {
+											"type": "string",
+											"example": "There was a duplicate key error"
 										}
 									}
 								}
@@ -231,24 +256,19 @@
 										{
 											"properties": {
 												"success": {
-													"type": "boolean",
-													"example": false
+													"type": "string",
+													"example": "error"
 												},
-												"message": {
+												"error": {
 													"type": "string",
 													"example": "Field password empty"
-												}
-											}
-										},
-										{
-											"properties": {
-												"success": {
-													"type": "boolean",
-													"example": false
 												},
-												"message": {
-													"type": "string",
-													"example": "Field nickname empty"
+												"fields": {
+													"type": "array",
+													"items": {
+														"type": "string",
+														"example": ["email", "password"]
+													}
 												}
 											}
 										}
@@ -286,26 +306,6 @@
 								"schema": {}
 							}
 						}
-					},
-					"400": {
-						"description": "BAD",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"success": {
-											"type": "boolean",
-											"example": false
-										},
-										"message": {
-											"type": "string",
-											"example": "Invalid Password"
-										}
-									}
-								}
-							}
-						}
 					}
 				}
 			}
@@ -339,6 +339,9 @@
 						"applecation/json": {
 							"schema": {
 								"$ref": "#/components/schemas/TaskCreate"
+							},
+							"example": {
+								"isDone": true
 							}
 						}
 					}
@@ -494,7 +497,8 @@
 		},
 		"/tasks/planning/custom": {
 			"post": {
-				"description": "Create custom planing Task",
+				"description": "Create custom planing Task when user will add custom task to PlanningPage list.",
+				"summary": "Create custom planing Task when user will add custom task to PlanningPage list.",
 				"tags": ["Protected"],
 				"security": ["bearerAuth"],
 				"parameters": [
@@ -547,7 +551,8 @@
 		},
 		"/tasks/planning/week": {
 			"post": {
-				"description": "Create week from planning task",
+				"description": "Create for week tasks from planning task, this endpoints on Sumbit button in PlanningPage",
+				"summary": "This endpoints need for set selected tasks in PlanningPage by submit button",
 				"security": ["bearerAuth"],
 				"tags": ["Protected"],
 				"parameters": [
@@ -563,6 +568,42 @@
 						"style": "simple"
 					}
 				],
+				"requestBody": {
+					"description": "",
+					"required": ["email", "password"],
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CustomPlanningTask"
+							},
+							"example": {
+								"tasks": [
+									{
+										"taskId": "5dfae60d5c54e0bca5e3c717",
+										"selectedDays": ["2019-12-19", "2019-12-16"]
+									},
+									{
+										"taskId": "5dfae60d5c54e0bca5e3c71b",
+										"selectedDays": ["2019-12-15", "2019-12-16"]
+									},
+									{
+										"taskId": "5dfae92895cc29d9de4f928e",
+										"selectedDays": ["2019-12-15", "2019-12-16"]
+									},
+									{
+										"taskId": "5dfae60d5c54e0bca5e3c71c",
+										"selectedDays": [
+											"2019-12-15",
+											"2019-12-17",
+											"2019-12-18",
+											"2019-12-19"
+										]
+									}
+								]
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -601,6 +642,7 @@
 		"/tasks/planning": {
 			"get": {
 				"description": "Get planning Tasks",
+				"summary": "This endpoints need for PlanningPage. Get planning Tasks",
 				"tags": ["Protected"],
 				"security": ["bearerAuth"],
 				"parameters": [
@@ -622,8 +664,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "object",
-									"$ref": "#/components/schemas/GetTasks"
+									"$ref": "#/components/schemas/GetPlanningTasks"
 								}
 							}
 						}
@@ -652,6 +693,7 @@
 			},
 			"post": {
 				"description": "Create planning task",
+				"summary": "Create planning task",
 				"tags": ["Protected"],
 				"security": ["bearerAuth"],
 				"parameters": [
@@ -667,6 +709,17 @@
 						"style": "simple"
 					}
 				],
+				"requestBody": {
+					"description": "",
+					"required": ["email", "password"],
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CustomPlanningTask"
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -860,6 +913,7 @@
 		"/tasks/default": {
 			"post": {
 				"description": "Create default tasks",
+				"summary": "This endpoint need to create all default tasks. Create default tasks",
 				"tags": ["Protected"],
 				"security": ["bearerAuth"],
 				"parameters": [
@@ -1007,9 +1061,23 @@
 					"password": {
 						"type": "string"
 					},
-					"nickname": {"type": "sting"}
+					"nickname": {"type": "sting"},
+					"name": {
+						"type": "object",
+						"properties": {
+							"fullName": {
+								"type": "string"
+							},
+							"firstName": {
+								"type": "string"
+							},
+							"lastName": {
+								"type": "string"
+							}
+						}
+					}
 				},
-				"required": ["email", "password", "nickname"],
+				"required": ["email", "password", "fullName"],
 				"example": {
 					"email": "testovoy@gmail.com",
 					"password": "password",
@@ -1025,68 +1093,85 @@
 					"email": {
 						"type": "string",
 						"format": "email"
+					},
+					"name": {
+						"type": "object",
+						"properties": {
+							"fullName": {
+								"type": "string"
+							},
+							"firstName": {
+								"type": "string"
+							},
+							"lastName": {
+								"type": "string"
+							}
+						}
 					}
 				}
 			},
 			"GetTasks": {
 				"type": "object",
 				"properties": {
-					"status": {
+					"today": {
 						"type": "string",
-						"default": "success",
-						"example": "success"
+						"format": "datetime",
+						"example": "2019-12-18T23:34:19.107Z"
+					},
+					"weekRange": {
+						"type": "object",
+						"properties": {
+							"fromDate": {
+								"type": "string",
+								"format": "datetime",
+								"example": "2019-12-18T23:34:19.107Z"
+							},
+							"toDate": {
+								"type": "string",
+								"format": "datetime",
+								"example": "2019-12-18T23:34:19.107Z"
+							}
+						}
 					},
 					"tasks": {
 						"type": "array",
 						"items": {
 							"$ref": "#/components/schemas/Task"
 						}
-					}
-				}
-			},
-			"GetGoals": {
-				"type": "object",
-				"properties": {
-					"status": {
-						"type": "string",
-						"default": "success",
-						"example": "success"
 					},
-					"tasks": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/Goal"
-						}
+					"totalAmount": {
+						"type": "number",
+						"example": 0
+					},
+					"totalDone": {
+						"type": "number",
+						"example": 0
 					}
 				}
 			},
 			"Task": {
 				"type": "object",
 				"properties": {
-					"title": {
-						"type": "string"
+					"isDone": {"type": "boolean", "default": false},
+					"points": {"type": "number", "example": 1},
+					"cardTitle": {"type": "string", "example": "прибрати у шафі"},
+					"imageUrl": {
+						"type": "string",
+						"example": "https://kidslike.goit.co.ua/images/washGlass.png"
 					},
-					"description": {"type": "string"},
-					"_id": {"type": "string", "format": "uuid"},
-					"points": {"type": "number"}
+					"_id": {"type": "string", "format": "uuid"}
 				}
 			},
-			"Goal": {
+			"CustomPlanningTask": {
 				"type": "object",
 				"properties": {
-					"title": {
+					"cardTitle": {
 						"type": "string"
 					},
-					"description": {
-						"type": "string"
-					},
-					"_id": {
+					"imageUrl": {
 						"type": "string",
-						"format": "uuid"
-					},
-					"points": {
-						"type": "number",
-						"format": "uuid"
+						"format": "url",
+						"example": "https://kidslike.goit.co.ua/images/default.jpg"
 					}
 				}
 			},
@@ -1106,6 +1191,26 @@
 					}
 				}
 			},
+			"PlanningTaskResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "string",
+						"default": "OK",
+						"example": "OK"
+					},
+					"planningTask": {
+						"type": "object",
+						"properties": {
+							"status": {
+								"type": "string",
+								"default": "OK",
+								"example": "OK"
+							}
+						}
+					}
+				}
+			},
 			"LoginResponse": {
 				"type": "object",
 				"properties": {
@@ -1114,17 +1219,12 @@
 						"default": "success",
 						"example": "success"
 					},
-					"user": {
-						"type": "object",
-						"properties": {
-							"userData": {
-								"$ref": "#/components/schemas/User"
-							},
-							"token": {
-								"type": "string",
-								"example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZDNhMTM4NmIxZTg1NTdjZjIzNjY3ODEiLCJpYXQiOjE1NjQwODcxNzV9.jSdzHuBSf4yKS6t7zwt0AoQIchHlz73JDOjfHVdbTBk"
-							}
-						}
+					"userData": {
+						"$ref": "#/components/schemas/User"
+					},
+					"token": {
+						"type": "string",
+						"example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZDNhMTM4NmIxZTg1NTdjZjIzNjY3ODEiLCJpYXQiOjE1NjQwODcxNzV9.jSdzHuBSf4yKS6t7zwt0AoQIchHlz73JDOjfHVdbTBk"
 					}
 				}
 			},
@@ -1136,35 +1236,12 @@
 						"default": "success",
 						"example": "success"
 					},
-					"user": {
-						"type": "object",
-						"properties": {
-							"userData": {
-								"$ref": "#/components/schemas/User"
-							},
-							"token": {
-								"type": "string",
-								"example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZDNhMTM4NmIxZTg1NTdjZjIzNjY3ODEiLCJpYXQiOjE1NjQwODcxNzV9.jSdzHuBSf4yKS6t7zwt0AoQIchHlz73JDOjfHVdbTBk"
-							},
-							"childs": {
-								"type": "array",
-								"items": {
-									"type": "object"
-								}
-							},
-							"tasks": {
-								"type": "array",
-								"items": {
-									"$ref": "#/components/schemas/Task"
-								}
-							},
-							"goals": {
-								"type": "array",
-								"items": {
-									"$ref": "#/components/schemas/Goal"
-								}
-							}
-						}
+					"userData": {
+						"$ref": "#/components/schemas/User"
+					},
+					"token": {
+						"type": "string",
+						"example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZDNhMTM4NmIxZTg1NTdjZjIzNjY3ODEiLCJpYXQiOjE1NjQwODcxNzV9.jSdzHuBSf4yKS6t7zwt0AoQIchHlz73JDOjfHVdbTBk"
 					}
 				}
 			}

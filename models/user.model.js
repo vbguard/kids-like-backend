@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
 const config = require('../config/config');
+const mongooseValidationErrorTransform = require('mongoose-validation-error-transform');
 
 const UserSchema = new Schema(
 	{
@@ -56,7 +56,8 @@ UserSchema.methods.getPublicFields = function() {
 	const returnObject = {
 		userData: {
 			nickname: this.nickname,
-			email: this.email
+			email: this.email,
+			name: this.name
 		},
 		token: this.token
 	};
@@ -79,6 +80,14 @@ UserSchema.pre(
 		next(err);
 	}
 );
+
+UserSchema.post('save', function(error, doc, next) {
+	if (error.name === 'MongoError' && error.code === 11000) {
+		next(new Error('There was a duplicate key error'));
+	} else {
+		next();
+	}
+});
 
 UserSchema.methods.comparePassword = function(candidatePassword, next) {
 	bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
@@ -107,6 +116,25 @@ UserSchema.methods.getJWT = function() {
 
 	return token;
 };
+
+// UserSchema.plugin(mongooseValidationErrorTransform, {
+// 	//
+// 	// these are the default options you can override
+// 	// (you don't need to specify this object otherwise)
+// 	//
+
+// 	// should we capitalize the first letter of the message?
+// 	// capitalize: true,
+
+// 	// should we convert `full_name` => `Full name`?
+// 	// humanize: true,
+
+// 	// how should we join together multiple validation errors?
+// 	transform: function(messages) {
+// 		if (messages.length === 1) return messages[0];
+// 		return `<ul><li>${messages.join('</li><li>')}</li></ul>`;
+// 	}
+// });
 
 const Users = mongoose.model('Users', UserSchema);
 

@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 const DefaultTasksSchema = new Schema({
 	cardTitle: String,
 	imageUrl: String,
+	points: {
+		type: Number,
+		default: 0
+	}
 });
 
 DefaultTasksSchema.pre('findOneAndUpdate', function() {
