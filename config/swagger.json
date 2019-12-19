@@ -32,7 +32,7 @@
 		},
 		{
 			"name": "Protected For front pri",
-			"description": "Protected routes"
+			"description": "Protected routes for prior need to"
 		}
 	],
 	"consumes": ["application/json"],
