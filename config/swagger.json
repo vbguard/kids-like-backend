@@ -29,6 +29,10 @@
 		{
 			"name": "Protected",
 			"description": "Protected routes"
+		},
+		{
+			"name": "Protected For front pri",
+			"description": "Protected routes"
 		}
 	],
 	"consumes": ["application/json"],
@@ -312,7 +316,7 @@
 		},
 		"/tasks/{taskId}": {
 			"patch": {
-				"tags": ["Protected"],
+				"tags": ["Protected For front pri"],
 				"summary": "If user toggle (complete) task",
 				"security": ["bearerAuth"],
 				"description": "Update task by taskId",
@@ -384,7 +388,7 @@
 		"/tasks": {
 			"get": {
 				"summary": "Get user Tasks",
-				"tags": ["Protected"],
+				"tags": ["Protected For front pri"],
 				"security": ["bearerAuth"],
 				"parameters": [
 					{
@@ -499,7 +503,7 @@
 			"post": {
 				"description": "Create custom planing Task when user will add custom task to PlanningPage list.",
 				"summary": "Create custom planing Task when user will add custom task to PlanningPage list.",
-				"tags": ["Protected"],
+				"tags": ["Protected For front pri"],
 				"security": ["bearerAuth"],
 				"parameters": [
 					{
@@ -554,7 +558,7 @@
 				"description": "Create for week tasks from planning task, this endpoints on Sumbit button in PlanningPage",
 				"summary": "This endpoints need for set selected tasks in PlanningPage by submit button",
 				"security": ["bearerAuth"],
-				"tags": ["Protected"],
+				"tags": ["Protected For front pri"],
 				"parameters": [
 					{
 						"name": "Authorization",
@@ -643,7 +647,7 @@
 			"get": {
 				"description": "Get planning Tasks",
 				"summary": "This endpoints need for PlanningPage. Get planning Tasks",
-				"tags": ["Protected"],
+				"tags": ["Protected For front pri"],
 				"security": ["bearerAuth"],
 				"parameters": [
 					{
